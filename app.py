@@ -624,13 +624,13 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
     )
     st.caption("เพิ่มสถานที่ จัดการการเลือก ❤️ และลบข้อมูล Location")
     tab_location, tab_likes, tab_delete_location = st.tabs(
-        ["<i class="fa-solid fa-location-dot"></i> เพิ่มสถานที่", "❤️ จัดการการเลือก", "🗑️ ลบ"]
+        ["📍 เพิ่มสถานที่", "❤️ จัดการการเลือก", "🗑️ ลบ"]
     )
     # =========================================================
     # เพิ่มสถานที่
     # =========================================================
     with tab_location:
-        st.markdown("### <i class="fa-solid fa-location-dot"></i> เพิ่มสถานที่ถ่ายรูป")
+        st.markdown("### 📍 เพิ่มสถานที่ถ่ายรูป")
         st.write("เพิ่มสถานที่ใหม่พร้อมแนบรูปภาพลงในระบบ")
         with st.form("add_location_form", clear_on_submit=True):
             new_location_name = st.text_input(
@@ -804,10 +804,7 @@ elif page == "กราฟความสัมพันธ์":
     st.caption("เลือกชื่อคนเพื่อดูเฉพาะความสัมพันธ์ของคนนั้น หรือเลือกทั้งหมดเพื่อดู Graph ทั้งระบบ")
     user_names = [u["name"] for u in get_users()]
     graph_options = ["ทั้งหมด"] + user_names
-    st.markdown(
-        '<h3><i class="fa-solid fa-user"></i> ชื่อคน</h3>',
-        unsafe_allow_html=True
-    )
+    st.markdown("### 👤 ชื่อคน")
     selected_graph_user = st.selectbox(
         "ชื่อคน",
         graph_options,
@@ -994,7 +991,7 @@ elif page == "กราฟความสัมพันธ์":
         st.markdown(
             f"""
             <div class="graph-card">
-                <strong><i class="fa-solid fa-thumbtack"></i> กำลังแสดง: {html.escape(selected_graph_user)}</strong><br>
+                <strong>📌 กำลังแสดง: {html.escape(selected_graph_user)}</strong><br>
                 <span class="muted">
                     คน {len(user_nodes)} คน · สถานที่ {len(location_nodes)} แห่ง ·
                     LIKES {len(like_edges)} รายการ · FRIEND {len(friend_edges)} ความสัมพันธ์
