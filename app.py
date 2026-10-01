@@ -1063,7 +1063,7 @@ elif page == "กราฟความสัมพันธ์":
 
         def svg_line(x1: float, y1: float, x2: float, y2: float, dashed: bool = False) -> str:
             dash = ' stroke-dasharray="8 7"' if dashed else ""
-            edge_color = "#D7A9C1" if dashed else "#AAB8F2"
+            edge_color = "#CFECF3" if dashed else "#DAF9DE"
             edge_width = "2.2" if dashed else "3.2"
             return (
                 f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" '
