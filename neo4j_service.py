@@ -35,16 +35,16 @@ LIKES = [
 
 
 LOCATION_IMAGES = {
-    "ICONSIAM": "assets/locations/iconsiam.jpg",
-    "Talad Noi": "assets/locations/talad_noi.jpg",
-    "Asiatique The Riverfront": "assets/locations/asiatique_the_riverfront.jpg",
-    "Benjakitti Park": "assets/locations/benjakitti_park.jpg",
-    "Chatuchak Weekend Market": "assets/locations/chatuchak_weekend_market.jpg",
-    "The Commons Thonglor": "assets/locations/the_commons_thonglor.jpg",
-    "Wat Arun": "assets/locations/wat_arun.jpg",
-    "Yaowarat": "assets/locations/yaowarat.jpg",
-    "Bangkok Art and Culture Centre": "assets/locations/bangkok_art_and_culture_centre.jpg",
-    "Ancient City": "assets/locations/ancient_city.jpg",
+    "ICONSIAM": "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1200&q=80",
+    "Talad Noi": "https://images.unsplash.com/photo-1528181304800-259b08848526?auto=format&fit=crop&w=1200&q=80",
+    "Asiatique The Riverfront": "https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=1200&q=80",
+    "Benjakitti Park": "https://images.unsplash.com/photo-1470214304380-aadaedcfff1b?auto=format&fit=crop&w=1200&q=80",
+    "Chatuchak Weekend Market": "https://images.unsplash.com/photo-1523731407965-2430cd12f5e4?auto=format&fit=crop&w=1200&q=80",
+    "The Commons Thonglor": "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80",
+    "Wat Arun": "https://images.unsplash.com/photo-1563492065599-3520f775eeed?auto=format&fit=crop&w=1200&q=80",
+    "Yaowarat": "https://images.unsplash.com/photo-1528181304800-259b08848526?auto=format&fit=crop&w=1200&q=80",
+    "Bangkok Art and Culture Centre": "https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&w=1200&q=80",
+    "Ancient City": "https://images.unsplash.com/photo-1506665531195-3566af2b4dfa?auto=format&fit=crop&w=1200&q=80",
 }
 
 FRIENDSHIPS = [
@@ -239,8 +239,102 @@ def get_user_profile(name: str) -> dict[str, Any] | None:
     }
 
 
+
+def create_user(name: str) -> None:
+    name = name.strip()
+    if not name:
+        raise ValueError("ชื่อ User ต้องไม่ว่าง")
+    create_schema()
+    query(
+        "MERGE (:User {name:$name})",
+        {"name": name},
+        write=True,
+    )
+
+
+def create_friendship(person1: str, person2: str) -> None:
+    if person1 == person2:
+        raise ValueError("ไม่สามารถสร้างความสัมพันธ์กับตัวเองได้")
+    query(
+        """
+        MATCH (a:User {name:$person1}), (b:User {name:$person2})
+        MERGE (a)-[:FRIEND]-(b)
+        """,
+        {"person1": person1, "person2": person2},
+        write=True,
+    )
+
+
+def delete_friendship(person1: str, person2: str) -> None:
+    query(
+        """
+        MATCH (a:User {name:$person1})-[r:FRIEND]-(b:User {name:$person2})
+        DELETE r
+        """,
+        {"person1": person1, "person2": person2},
+        write=True,
+    )
+
+
+def delete_user(name: str) -> None:
+    query(
+        "MATCH (u:User {name:$name}) DETACH DELETE u",
+        {"name": name},
+        write=True,
+    )
+
+
+def create_location(name: str, image: str = "") -> None:
+    name = name.strip()
+    image = image.strip()
+    if not name:
+        raise ValueError("ชื่อสถานที่ต้องไม่ว่าง")
+    create_schema()
+    query(
+        """
+        MERGE (l:Location {name:$name})
+        SET l.image = $image
+        """,
+        {"name": name, "image": image},
+        write=True,
+    )
+
+
+def delete_location(name: str) -> None:
+    query(
+        "MATCH (l:Location {name:$name}) DETACH DELETE l",
+        {"name": name},
+        write=True,
+    )
+
+
+def add_like(user: str, location: str) -> None:
+    query(
+        """
+        MATCH (u:User {name:$user}), (l:Location {name:$location})
+        MERGE (u)-[:LIKES]->(l)
+        """,
+        {"user": user, "location": location},
+        write=True,
+    )
+
+
+def remove_like(user: str, location: str) -> None:
+    query(
+        """
+        MATCH (u:User {name:$user})-[r:LIKES]->(l:Location {name:$location})
+        DELETE r
+        """,
+        {"user": user, "location": location},
+        write=True,
+    )
+
 def recommend_locations(target_user: str, top_n: int | None = None) -> list[dict[str, Any]]:
-    if target_user not in USERS:
+    exists = query(
+        "MATCH (u:User {name:$name}) RETURN u.name AS name",
+        {"name": target_user},
+    )
+    if not exists:
         raise ValueError(f"ไม่พบผู้ใช้: {target_user}")
     if top_n is not None and (not isinstance(top_n, int) or top_n <= 0):
         raise ValueError("top_n ต้องเป็นจำนวนเต็มที่มากกว่า 0 หรือเป็น None")
