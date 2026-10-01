@@ -333,19 +333,7 @@ with st.sidebar:
         "https://natakan-twui.github.io/Photography/",
         use_container_width=True,
     )
-
-    st.divider()
-
-    page = st.radio(
-        "เมนู",
-        [
-            "แนะนำสถานที่ถ่ายรูป",
-            "จัดการคน & เพื่อน",
-            "จัดการสถานที่ถ่ายรูป & การเลือก",
-            "กราฟความสัมพันธ์",
-        ],
-    )
-
+    
     st.markdown(
         """
         <div class="sidebar-project-card">
@@ -359,6 +347,20 @@ with st.sidebar:
         """,
         unsafe_allow_html=True,
     )
+
+    st.divider()
+
+    page = st.radio(
+        "เมนู",
+        [
+            "แนะนำสถานที่ถ่ายรูป",
+            "จัดการคน & เพื่อน",
+            "จัดการสถานที่ถ่ายรูป & การเลือก",
+            "กราฟความสัมพันธ์",
+        ],
+    )
+
+    
 
     st.divider()
     st.caption("Photography Location Recommender")
