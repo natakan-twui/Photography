@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html lang="th">
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+/>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,7 +23,14 @@
             color: #5f4653;
             min-height: 100vh;
         }
-
+        
+        .header-icon i,
+        .section-title h2 i,
+        .card-icon i,
+        .btn i,
+        .presentation h2 i {
+            margin-right: 7px;
+        }
         /* =========================
            Header
         ========================= */
@@ -245,6 +256,7 @@
             background: #fffafd;
         }
 
+        
         /* =========================
            Responsive
         ========================= */
@@ -292,7 +304,9 @@
     ========================== -->
 
     <header>
-        <div class="header-icon">📚</div>
+        <div class="header-icon">
+            <i class="fa-solid fa-book-open"></i>
+        </div>
 
         <h1>My Assignments & Projects</h1>
 
@@ -309,7 +323,10 @@
     <main>
 
         <div class="section-title">
-            <h2>📚 Assignments</h2>
+            <h2>
+                <i class="fa-solid fa-book-open"></i>
+                Assignments
+            </h2>
 
             <p>
                 รวมผลงานการบ้านและโปรเจกต์ทั้งหมด
@@ -326,7 +343,7 @@
             <div class="card">
 
                 <div class="card-icon">
-                    📝
+                    <i class="fa-solid fa-pen-to-square"></i>
                 </div>
 
                 <span class="tag">
@@ -338,8 +355,7 @@
                 </h3>
 
                 <p>
-                    การบ้านชิ้นที่ 1 ของรายวิชา
-                    สามารถเปิดดู Notebook และไฟล์งานบน GitHub ได้
+                    สร้างกราฟผู้ใช้และสถานที่ถ่ายรูปด้วย Python / NetworkX เพื่อสำรวจความชอบและแนวทางแนะนำ
                 </p>
 
                 <div class="buttons">
@@ -372,7 +388,7 @@
             <div class="card">
 
                 <div class="card-icon">
-                    📊
+                    <i class="fa-solid fa-chart-line"></i>
                 </div>
 
                 <span class="tag">
@@ -384,8 +400,7 @@
                 </h3>
 
                 <p>
-                    การบ้านชิ้นที่ 2 ของรายวิชา
-                    สามารถเปิดดู Notebook และไฟล์งานบน GitHub ได้
+                    วิเคราะห์ความสัมพันธ์และแนะนำสถานที่ถ่ายรูปด้วย Neo4j 
                 </p>
 
                 <div class="buttons">
@@ -418,7 +433,7 @@
             <div class="card new-project">
 
                 <div class="card-icon">
-                    📷
+                    <i class="fa-solid fa-camera"></i>
                 </div>
 
                 <span class="tag">
@@ -443,7 +458,8 @@
                         target="_blank"
                         class="btn btn-system"
                     >
-                        🚀 เข้าสู่ระบบแนะนำ
+                        <i class="fa-solid fa-rocket"></i>
+                        เข้าสู่ระบบแนะนำ
                     </a>
 
                     <!-- แก้เป็นลิงก์ GitHub project -->
@@ -452,7 +468,8 @@
                         target="_blank"
                         class="btn btn-secondary"
                     >
-                        💻 ดูโค้ดโปรเจกต์บน GitHub
+                        <i class="fa-brands fa-github"></i>
+                        ดูโค้ดโปรเจกต์บน GitHub
                     </a>
 
                 </div>
@@ -468,7 +485,10 @@
 
         <div class="presentation">
 
-            <h2>📊 Presentation</h2>
+            <h2>
+                <i class="fa-solid fa-chart-column"></i>
+                Presentation
+            </h2>
 
             <p>
                 PowerPoint สำหรับนำเสนอโปรเจกต์
@@ -481,6 +501,7 @@
                 class="btn btn-primary"
                 target="_blank"
             >
+                <i class="fa-solid fa-file-powerpoint"></i>
                 เปิด PowerPoint
             </a>
 
