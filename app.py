@@ -268,10 +268,13 @@ def show_location_image(image_value: str | None, caption: str | None = None) -> 
         st.info("ไม่พบรูปภาพ")
 require_connection()
 with st.sidebar:
-    st.markdown("## <i class="fa-solid fa-camera"></i> Photography Graph")
+    st.markdown(
+    '## <i class="fa-solid fa-camera"></i> Photography Graph',
+    unsafe_allow_html=True
+)
     st.caption("Neo4j Aura + Streamlit")
     st.link_button(
-        "↩️ กลับหน้ารวมโปรเจกต์",
+        '<i class="fa-solid fa-arrow-left"></i> กลับหน้ารวมโปรเจกต์',
         "https://natakan-twui.github.io/Photography/",
         use_container_width=True,
     )
