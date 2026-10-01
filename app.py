@@ -377,8 +377,8 @@ st.markdown(
 )
 
 
-if page == "Dashboard":
-    st.subheader("📊 Dashboard")
+if page == "แนะนำสถานที่ถ่ายรูป":
+    st.subheader("📊 แนะนำสถานที่ถ่ายรูป")
 
     # ===== Graph Overview =====
     m = get_dashboard_metrics()
