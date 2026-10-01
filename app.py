@@ -78,7 +78,7 @@ st.set_page_config(
 
     page_title="Photography Location Recommender",
 
-    page_icon="◉",
+    page_icon="📷",
 
     layout="wide",
 
@@ -91,8 +91,6 @@ st.set_page_config(
 st.markdown(
 
     """
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <style>
 
@@ -548,23 +546,6 @@ hr {
 
 
 
-
-.icon, [class^="ico-"] { display:inline-block; margin-right:7px; font-family:"Font Awesome 6 Free"; font-weight:900; font-style:normal; }
-.ico-camera::before { content:"\f030"; }
-.ico-arrow-left::before { content:"\f060"; }
-.ico-user::before { content:"\f007"; }
-.ico-chart::before { content:"\f080"; }
-.ico-heart::before { content:"\f004"; }
-.ico-users::before { content:"\f0c0"; }
-.ico-sparkles::before { content:"\f890"; }
-.ico-location::before { content:"\f3c5"; }
-.ico-trash::before { content:"\f2ed"; }
-.ico-plus::before { content:"\f067"; }
-.ico-handshake::before { content:"\f2b5"; }
-.ico-list::before { content:"\f03a"; }
-.ico-diagram::before { content:"\f542"; }
-.ico-pin::before { content:"\f08d"; }
-.ico-heart-broken::before { content:"\f7a9"; }
     </style>
 
     """,
@@ -671,7 +652,7 @@ require_connection()
 
 with st.sidebar:
 
-    st.markdown("## <span class=ico-camera></span> Photography Graph")
+    st.markdown("## 📷 Photography Graph")
 
     st.caption("Neo4j Aura + Streamlit")
 
@@ -679,7 +660,7 @@ with st.sidebar:
 
     st.link_button(
 
-        "← กลับหน้ารวมโปรเจกต์",
+        "↩️ กลับหน้ารวมโปรเจกต์",
 
         "https://natakan-twui.github.io/Photography/",
 
@@ -695,7 +676,7 @@ with st.sidebar:
 
         <div class="sidebar-project-card">
 
-            <div class="title"><span class=ico-user></span> ผู้จัดทำ</div>
+            <div class="title">👤 ผู้จัดทำ</div>
 
             <div class="info">
 
@@ -759,7 +740,7 @@ st.markdown(
 
     <div class="hero">
 
-      <h1><span class=ico-camera></span> Photography Location Recommender</h1>
+      <h1>📷 Photography Location Recommender</h1>
 
       <p>ระบบแนะนำสถานที่ถ่ายรูปด้วย Graph Database และ Neo4j</p>
 
@@ -777,13 +758,7 @@ st.markdown(
 
 if page == "แนะนำสถานที่ถ่ายรูป":
 
-    st.markdown(
-
-        "<h3><span class=ico-chart></span> แนะนำสถานที่ถ่ายรูป</h3>",
-
-        unsafe_allow_html=True,
-
-    )
+    st.subheader("📊 แนะนำสถานที่ถ่ายรูป")
 
 
 
@@ -822,7 +797,7 @@ if page == "แนะนำสถานที่ถ่ายรูป":
 
 
         # ===== Selected User =====
-        st.markdown(f"### <span class=ico-user></span> {selected}")
+        st.markdown(f"### 👤 {selected}")
 
 
 
@@ -832,7 +807,7 @@ if page == "แนะนำสถานที่ถ่ายรูป":
 
         with user_col1:
 
-            st.markdown("**<span class=ico-heart></span> สถานที่ที่ชอบ**")
+            st.markdown("**❤️ สถานที่ที่ชอบ**")
 
             st.write(f"{len(profile['likes'])} แห่ง")
 
@@ -840,7 +815,7 @@ if page == "แนะนำสถานที่ถ่ายรูป":
 
         with user_col2:
 
-            st.markdown("**<span class=ico-users></span> เพื่อน**")
+            st.markdown("**👥 เพื่อน**")
 
             st.write(f"{len(profile['friends'])} คน")
 
@@ -851,7 +826,7 @@ if page == "แนะนำสถานที่ถ่ายรูป":
 
 
         # ===== Friends =====
-        st.markdown("### <span class=ico-users></span> เพื่อนของคุณ")
+        st.markdown("### 👥 เพื่อนของคุณ")
 
 
 
@@ -875,7 +850,7 @@ if page == "แนะนำสถานที่ถ่ายรูป":
 
                         <div class="recommend-card" style="text-align:center;">
 
-                            <div style="font-size:2rem;"><span class=ico-user></span></div>
+                            <div style="font-size:2rem;">👤</div>
 
                             <strong>{friend}</strong>
 
@@ -898,7 +873,7 @@ if page == "แนะนำสถานที่ถ่ายรูป":
 
 
         # ===== Recommended Locations from Friends =====
-        st.markdown("### <span class=ico-sparkles></span> สถานที่ที่แนะนำจากเพื่อน")
+        st.markdown("### ✨ สถานที่ที่แนะนำจากเพื่อน")
 
 
 
@@ -1017,13 +992,13 @@ if page == "แนะนำสถานที่ถ่ายรูป":
 
                                     <div style="font-size:1.1rem; font-weight:700; color:#91496A;">
 
-                                        <span class=ico-location></span> {location_name}
+                                        📍 {location_name}
 
                                     </div>
 
                                     <div style="margin-top:.45rem; color:#9B7181; font-size:.9rem;">
 
-                                        <span class=ico-users></span> เพื่อนที่ชอบสถานที่นี้:<br>
+                                        👥 เพื่อนที่ชอบสถานที่นี้:<br>
 
                                         <strong style="color:#91496A;">
 
@@ -1065,13 +1040,7 @@ if page == "แนะนำสถานที่ถ่ายรูป":
 
 elif page == "จัดการคน & เพื่อน":
 
-    st.markdown(
-
-        "<h3><span class=ico-users></span> จัดการคน & เพื่อน</h3>",
-
-        unsafe_allow_html=True,
-
-    )
+    st.subheader("👥 จัดการคน & เพื่อน")
 
     st.caption("เพิ่มคน สร้างความสัมพันธ์เพื่อน และจัดการข้อมูล User ใน Graph")
 
@@ -1079,7 +1048,7 @@ elif page == "จัดการคน & เพื่อน":
 
     tab_add, tab_friend, tab_delete = st.tabs(
 
-        ["<span class=ico-plus></span> เพิ่มคน", "<span class=ico-handshake></span> เพิ่มความสัมพันธ์", "<span class=ico-trash></span> ลบ"]
+        ["➕ เพิ่มคน", "🤝 เพิ่มความสัมพันธ์", "🗑️ ลบ"]
 
     )
 
@@ -1090,7 +1059,7 @@ elif page == "จัดการคน & เพื่อน":
     # =========================================================
     with tab_add:
 
-        st.markdown("### <span class=ico-plus></span> เพิ่มคน")
+        st.markdown("### ➕ เพิ่มคน")
 
         st.write("เพิ่ม User ใหม่เข้าไปเป็นโหนด `User` ใน Neo4j")
 
@@ -1153,7 +1122,7 @@ elif page == "จัดการคน & เพื่อน":
     # =========================================================
     with tab_friend:
 
-        st.markdown("### <span class=ico-handshake></span> เพิ่มความสัมพันธ์")
+        st.markdown("### 🤝 เพิ่มความสัมพันธ์")
 
 
 
@@ -1197,7 +1166,7 @@ elif page == "จัดการคน & เพื่อน":
 
             current_friends = get_user_friends(person1)
 
-            st.markdown(f"### <span class=ico-users></span> เพื่อนของ {person1} ตอนนี้")
+            st.markdown(f"### 👥 เพื่อนของ {person1} ตอนนี้")
 
 
 
@@ -1215,7 +1184,7 @@ elif page == "จัดการคน & เพื่อน":
 
                             <div class="recommend-card" style="text-align:center;">
 
-                                <div style="font-size:1.8rem;"><span class=ico-user></span></div>
+                                <div style="font-size:1.8rem;">👤</div>
 
                                 <strong>{friend}</strong>
 
@@ -1241,7 +1210,7 @@ elif page == "จัดการคน & เพื่อน":
 
             if st.button(
 
-                "<span class=ico-handshake></span> เชื่อมเป็นเพื่อนกัน",
+                "🤝 เชื่อมเป็นเพื่อนกัน",
 
                 type="primary",
 
@@ -1284,7 +1253,7 @@ elif page == "จัดการคน & เพื่อน":
 
         delete_relation_tab, delete_user_tab = st.tabs(
 
-            ["<span class=ico-trash></span> ลบความสัมพันธ์", "<span class=ico-user></span> ลบคน"]
+            ["🗑️ ลบความสัมพันธ์", "👤 ลบคน"]
 
         )
 
@@ -1292,7 +1261,7 @@ elif page == "จัดการคน & เพื่อน":
 
         with delete_relation_tab:
 
-            st.markdown("### <span class=ico-trash></span> ลบความสัมพันธ์เพื่อน")
+            st.markdown("### 🗑️ ลบความสัมพันธ์เพื่อน")
 
             user_names = [u["name"] for u in get_users()]
 
@@ -1336,7 +1305,7 @@ elif page == "จัดการคน & เพื่อน":
 
                     if st.button(
 
-                        "<span class=ico-trash></span> ลบความสัมพันธ์",
+                        "🗑️ ลบความสัมพันธ์",
 
                         type="primary",
 
@@ -1368,7 +1337,7 @@ elif page == "จัดการคน & เพื่อน":
 
         with delete_user_tab:
 
-            st.markdown("### <span class=ico-user></span> ลบคน")
+            st.markdown("### 👤 ลบคน")
 
             st.warning("การลบคนจะลบความสัมพันธ์ FRIEND และ LIKES ของคนนั้นด้วย")
 
@@ -1404,7 +1373,7 @@ elif page == "จัดการคน & เพื่อน":
 
                 if st.button(
 
-                    "<span class=ico-trash></span> ลบคน",
+                    "🗑️ ลบคน",
 
                     type="primary",
 
@@ -1440,21 +1409,15 @@ elif page == "จัดการคน & เพื่อน":
 
 elif page == "จัดการสถานที่ถ่ายรูป & การเลือก":
 
-    st.markdown(
+    st.subheader("📍 จัดการสถานที่ถ่ายรูป & การเลือก")
 
-        "<h3><span class=ico-location></span> จัดการสถานที่ถ่ายรูป & การเลือก</h3>",
-
-        unsafe_allow_html=True,
-
-    )
-
-    st.caption("เพิ่มสถานที่ จัดการการเลือก <span class=ico-heart></span> และลบข้อมูล Location")
+    st.caption("เพิ่มสถานที่ จัดการการเลือก ❤️ และลบข้อมูล Location")
 
 
 
     tab_location, tab_likes, tab_delete_location = st.tabs(
 
-        ["<span class=ico-location></span> เพิ่มสถานที่", "<span class=ico-heart></span> จัดการการเลือก", "<span class=ico-trash></span> ลบ"]
+        ["📍 เพิ่มสถานที่", "❤️ จัดการการเลือก", "🗑️ ลบ"]
 
     )
 
@@ -1465,7 +1428,7 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
     # =========================================================
     with tab_location:
 
-        st.markdown("### <span class=ico-location></span> เพิ่มสถานที่ถ่ายรูป")
+        st.markdown("### 📍 เพิ่มสถานที่ถ่ายรูป")
 
         st.write("เพิ่มสถานที่ใหม่พร้อมแนบรูปภาพลงในระบบ")
 
@@ -1579,7 +1542,7 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
 
         st.divider()
 
-        st.markdown("### <span class=ico-list></span> สถานที่ถ่ายรูปทั้งหมด")
+        st.markdown("### 📋 สถานที่ถ่ายรูปทั้งหมด")
 
         locations = get_locations()
 
@@ -1643,7 +1606,7 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
 
                             '<div style="color:#9B7181; font-size:.78rem;">ชื่อสถานที่</div>'
 
-                            f'<div style="font-size:1.05rem; font-weight:700; color:#91496A; margin-top:.2rem;"><span class=ico-location></span> {location["name"]}</div>'
+                            f'<div style="font-size:1.05rem; font-weight:700; color:#91496A; margin-top:.2rem;">📍 {location["name"]}</div>'
 
                             '</div>'
 
@@ -1662,7 +1625,7 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
     # =========================================================
     with tab_likes:
 
-        st.markdown("### <span class=ico-heart></span> จัดการการเลือกสถานที่")
+        st.markdown("### ❤️ จัดการการเลือกสถานที่")
 
         st.caption("สร้างหรือลบความสัมพันธ์ User → Location ด้วย `LIKES`")
 
@@ -1694,7 +1657,7 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
 
             current_likes = get_user_likes(like_user)
 
-            st.markdown(f"### <span class=ico-heart></span> สถานที่ที่ {like_user} เลือก")
+            st.markdown(f"### ❤️ สถานที่ที่ {like_user} เลือก")
 
 
 
@@ -1708,7 +1671,7 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
 
                         st.markdown(
 
-                            f"<div class=\"recommend-card\" style=\"text-align:center;\"><div style=\"font-size:1.6rem;\"><span class=ico-location></span></div><strong>{location}</strong></div>",
+                            f"<div class=\"recommend-card\" style=\"text-align:center;\"><div style=\"font-size:1.6rem;\">📍</div><strong>{location}</strong></div>",
 
                             unsafe_allow_html=True,
 
@@ -1726,7 +1689,7 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
 
             else:
 
-                if st.button("<span class=ico-heart></span> เพิ่มการเลือก", type="primary", use_container_width=True, key="add_like_button"):
+                if st.button("❤️ เพิ่มการเลือก", type="primary", use_container_width=True, key="add_like_button"):
 
                     try:
 
@@ -1750,7 +1713,7 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
 
                 remove_location = st.selectbox("เลือกสถานที่ที่ต้องการยกเลิกการเลือก", current_likes, key="remove_like_location")
 
-                if st.button("<span class=ico-heart-broken></span> ยกเลิกการเลือก", use_container_width=True, key="remove_like_button"):
+                if st.button("💔 ยกเลิกการเลือก", use_container_width=True, key="remove_like_button"):
 
                     try:
 
@@ -1773,7 +1736,7 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
     # =========================================================
     with tab_delete_location:
 
-        st.markdown("### <span class=ico-trash></span> ลบสถานที่ถ่ายรูป")
+        st.markdown("### 🗑️ ลบสถานที่ถ่ายรูป")
 
         st.warning("การลบสถานที่จะลบความสัมพันธ์ LIKES ที่เชื่อมกับสถานที่นั้นด้วย")
 
@@ -1799,7 +1762,7 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
 
 
 
-            if st.button("<span class=ico-trash></span> ลบสถานที่", type="primary", use_container_width=True, key="delete_location_button"):
+            if st.button("🗑️ ลบสถานที่", type="primary", use_container_width=True, key="delete_location_button"):
 
                 if not confirm_location:
 
@@ -1827,13 +1790,7 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
 
 elif page == "กราฟความสัมพันธ์":
 
-    st.markdown(
-
-        "<h3><span class=ico-diagram></span> กราฟความสัมพันธ์</h3>",
-
-        unsafe_allow_html=True,
-
-    )
+    st.subheader("🔗 กราฟความสัมพันธ์")
 
     st.caption("เลือกชื่อคนเพื่อดูเฉพาะความสัมพันธ์ของคนนั้น หรือเลือกทั้งหมดเพื่อดู Graph ทั้งระบบ")
 
@@ -1845,7 +1802,7 @@ elif page == "กราฟความสัมพันธ์":
 
 
 
-    st.markdown("### <span class=ico-user></span> ชื่อคน")
+    st.markdown("### 👤 ชื่อคน")
 
     selected_graph_user = st.selectbox(
 
@@ -2267,7 +2224,7 @@ elif page == "กราฟความสัมพันธ์":
 
             <div class="graph-card">
 
-                <strong><span class=ico-pin></span> กำลังแสดง: {html.escape(selected_graph_user)}</strong><br>
+                <strong>📌 กำลังแสดง: {html.escape(selected_graph_user)}</strong><br>
 
                 <span class="muted">
 
