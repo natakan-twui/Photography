@@ -832,7 +832,7 @@ elif page == "กราฟความสัมพันธ์":
         st.info("ยังไม่มีข้อมูลสำหรับแสดงกราฟ")
     else:
         width, height = 1400, 850
-        GRAPH_SCALE = 1.3
+        GRAPH_SCALE = 1.8
         cx, cy = width / 2, height / 2
         positions: dict[tuple[str, str], tuple[float, float]] = {}
         # เลือกคน: คนที่เลือกอยู่ตรงกลาง เพื่อนล้อมรอบ และสถานที่อยู่รอบนอก
