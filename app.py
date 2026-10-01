@@ -831,7 +831,7 @@ elif page == "กราฟความสัมพันธ์":
     if not user_nodes and not location_nodes:
         st.info("ยังไม่มีข้อมูลสำหรับแสดงกราฟ")
     else:
-        width, height = 1200, 760
+        width, height = 1400, 850
         cx, cy = width / 2, height / 2
         positions: dict[tuple[str, str], tuple[float, float]] = {}
         # เลือกคน: คนที่เลือกอยู่ตรงกลาง เพื่อนล้อมรอบ และสถานที่อยู่รอบนอก
@@ -925,7 +925,7 @@ elif page == "กราฟความสัมพันธ์":
             )
         svg_parts = [
             '<div style="width:100%; overflow:auto; border:1px solid #F3C4D6; border-radius:22px; background:#FFF8FB; box-shadow:0 6px 18px rgba(190,100,135,.08);">',
-            f'<svg viewBox="0 0 {width} {height}" width="100%" height="760" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">',
+            f'<svg viewBox="0 0 {width} {height}" width="100%" height="850" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">',
             '<rect width="1200" height="760" fill="#FFF8FB" rx="22"/>',
         ]
         # เส้นอยู่ด้านหลังวงกลม
@@ -944,7 +944,7 @@ elif page == "กราฟความสัมพันธ์":
         for name in sorted(location_nodes):
             svg_parts.append(svg_node("location", name))
         svg_parts.append("</svg></div>")
-        st.components.v1.html("".join(svg_parts), height=785, scrolling=False)
+        st.components.v1.html("".join(svg_parts), height=875, scrolling=False)
         st.markdown(
             f"""
             <div class="graph-card">
