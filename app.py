@@ -37,10 +37,7 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
-st.markdown("""
-<link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-""", unsafe_allow_html=True)
+
 st.markdown(
     """
     <style>
@@ -268,22 +265,17 @@ def show_location_image(image_value: str | None, caption: str | None = None) -> 
         st.info("ไม่พบรูปภาพ")
 require_connection()
 with st.sidebar:
-    st.markdown(
-    '## <i class="fa-solid fa-camera"></i> Photography Graph',
-    unsafe_allow_html=True
-)
+    st.markdown("## 📷 Photography Graph")
     st.caption("Neo4j Aura + Streamlit")
     st.link_button(
-        '<i class="fa-solid fa-arrow-left"></i> กลับหน้ารวมโปรเจกต์',
+        "↩️ กลับหน้ารวมโปรเจกต์",
         "https://natakan-twui.github.io/Photography/",
         use_container_width=True,
     )
     st.markdown(
         """
         <div class="sidebar-project-card">
-            <div class="title">
-                <i class="fa-solid fa-user"></i> ผู้จัดทำ
-            </div>
+            <div class="title">👤 ผู้จัดทำ</div>
             <div class="info">
                 ณฐกาญจน์ โพธิ์ทอง<br>
                 รหัส: 664245006<br>
@@ -308,20 +300,14 @@ with st.sidebar:
 st.markdown(
     """
     <div class="hero">
-      <h1>
-            <i class="fa-solid fa-camera"></i>
-            Photography Location Recommender
-        </h1>
+      <h1>📷 Photography Location Recommender</h1>
       <p>ระบบแนะนำสถานที่ถ่ายรูปด้วย Graph Database และ Neo4j</p>
     </div>
     """,
     unsafe_allow_html=True,
 )
 if page == "แนะนำสถานที่ถ่ายรูป":
-    st.markdown(
-    '<h3><i class="fa-solid fa-chart-column"></i> แนะนำสถานที่ถ่ายรูป</h3>',
-    unsafe_allow_html=True
-)
+    st.subheader("📊 แนะนำสถานที่ถ่ายรูป")
     # ===== Graph Overview =====
     m = get_dashboard_metrics()
     c1, c2, c3, c4 = st.columns(4)
@@ -335,29 +321,17 @@ if page == "แนะนำสถานที่ถ่ายรูป":
     profile = get_user_profile(selected)
     if profile:
         # ===== Selected User =====
-        st.markdown(
-            f'<h3><i class="fa-solid fa-user"></i> {selected}</h3>',
-            unsafe_allow_html=True
-        )
+        st.markdown(f"### 👤 {selected}")
         user_col1, user_col2 = st.columns(2)
         with user_col1:
-            st.markdown(
-                '<strong><i class="fa-solid fa-heart"></i> สถานที่ที่ชอบ</strong>',
-                unsafe_allow_html=True
-            )
+            st.markdown("**❤️ สถานที่ที่ชอบ**")
             st.write(f"{len(profile['likes'])} แห่ง")
         with user_col2:
-            st.markdown(
-                '<strong><i class="fa-solid fa-users"></i> เพื่อน</strong>',
-                unsafe_allow_html=True
-            )
+            st.markdown("**👥 เพื่อน**")
             st.write(f"{len(profile['friends'])} คน")
         st.divider()
         # ===== Friends =====
-        st.markdown(
-            '<h3><i class="fa-solid fa-users"></i> เพื่อนของคุณ</h3>',
-            unsafe_allow_html=True
-        )
+        st.markdown("### 👥 เพื่อนของคุณ")
         friends = get_user_friends(selected)
         if friends:
             friend_cols = st.columns(min(len(friends), 4))
@@ -366,9 +340,7 @@ if page == "แนะนำสถานที่ถ่ายรูป":
                     st.markdown(
                         f"""
                         <div class="recommend-card" style="text-align:center;">
-                            <div style="font-size:2rem;">
-                                <i class="fa-solid fa-user"></i>
-                            </div>
+                            <div style="font-size:2rem;">👤</div>
                             <strong>{friend}</strong>
                         </div>
                         """,
@@ -378,10 +350,7 @@ if page == "แนะนำสถานที่ถ่ายรูป":
             st.info("ผู้ใช้นี้ยังไม่มีเพื่อน")
         st.divider()
         # ===== Recommended Locations from Friends =====
-        st.markdown(
-            '<h3><i class="fa-solid fa-sparkles"></i> สถานที่ที่แนะนำจากเพื่อน</h3>',
-            unsafe_allow_html=True
-        )
+        st.markdown("### ✨ สถานที่ที่แนะนำจากเพื่อน")
         if friends:
             # เก็บสถานที่ + รายชื่อเพื่อนที่ชอบสถานที่นั้น
             recommended = {}
@@ -425,10 +394,10 @@ if page == "แนะนำสถานที่ถ่ายรูป":
                                 f"""
                                 <div class="recommend-card">
                                     <div style="font-size:1.1rem; font-weight:700; color:#91496A;">
-                                        <i class="fa-solid fa-location-dot"></i> {location_name}
+                                        📍 {location_name}
                                     </div>
                                     <div style="margin-top:.45rem; color:#9B7181; font-size:.9rem;">
-                                        <i class="fa-solid fa-users"></i> เพื่อนที่ชอบสถานที่นี้:<br>
+                                        👥 เพื่อนที่ชอบสถานที่นี้:<br>
                                         <strong style="color:#91496A;">
                                             {friend_text}
                                         </strong>
@@ -445,10 +414,7 @@ if page == "แนะนำสถานที่ถ่ายรูป":
         else:
             st.info("ยังไม่มีข้อมูลเพื่อนสำหรับสร้างคำแนะนำ")
 elif page == "จัดการคน & เพื่อน":
-    st.markdown(
-    '<h3><i class="fa-solid fa-users"></i> จัดการคน & เพื่อน</h3>',
-    unsafe_allow_html=True
-    )
+    st.subheader("👥 จัดการคน & เพื่อน")
     st.caption("เพิ่มคน สร้างความสัมพันธ์เพื่อน และจัดการข้อมูล User ใน Graph")
     tab_add, tab_friend, tab_delete = st.tabs(
         ["➕ เพิ่มคน", "🤝 เพิ่มความสัมพันธ์", "🗑️ ลบ"]
@@ -618,10 +584,7 @@ elif page == "จัดการคน & เพื่อน":
                             st.error("ลบคนไม่สำเร็จ")
                             st.exception(exc)
 elif page == "จัดการสถานที่ถ่ายรูป & การเลือก":
-    st.markdown(
-    '<h3><i class="fa-solid fa-location-dot"></i> จัดการสถานที่ถ่ายรูป & การเลือก</h3>',
-    unsafe_allow_html=True
-    )
+    st.subheader("📍 จัดการสถานที่ถ่ายรูป & การเลือก")
     st.caption("เพิ่มสถานที่ จัดการการเลือก ❤️ และลบข้อมูล Location")
     tab_location, tab_likes, tab_delete_location = st.tabs(
         ["📍 เพิ่มสถานที่", "❤️ จัดการการเลือก", "🗑️ ลบ"]
@@ -711,7 +674,7 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
                         card_html = (
                             '<div class="recommend-card" style="margin-top:-.35rem; text-align:center;">'
                             '<div style="color:#9B7181; font-size:.78rem;">ชื่อสถานที่</div>'
-                            f'<div style="font-size:1.05rem; font-weight:700; color:#91496A; margin-top:.2rem;"><i class="fa-solid fa-location-dot"></i> {location["name"]}</div>'
+                            f'<div style="font-size:1.05rem; font-weight:700; color:#91496A; margin-top:.2rem;">📍 {location["name"]}</div>'
                             '</div>'
                         )
                         st.markdown(card_html, unsafe_allow_html=True)
@@ -721,10 +684,7 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
     # จัดการ LIKES
     # =========================================================
     with tab_likes:
-        st.markdown(
-            '<h3><i class="fa-solid fa-heart"></i> จัดการการเลือกสถานที่</h3>',
-            unsafe_allow_html=True
-        )
+        st.markdown("### ❤️ จัดการการเลือกสถานที่")
         st.caption("สร้างหรือลบความสัมพันธ์ User → Location ด้วย `LIKES`")
         user_names = [u["name"] for u in get_users()]
         location_names = [l["name"] for l in get_locations()]
@@ -737,16 +697,13 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
             with c2:
                 like_location = st.selectbox("เลือกสถานที่", location_names, key="like_location")
             current_likes = get_user_likes(like_user)
-            st.markdown(
-                f'<h3><i class="fa-solid fa-heart"></i> สถานที่ที่ {like_user} เลือก</h3>',
-                unsafe_allow_html=True
-            )
+            st.markdown(f"### ❤️ สถานที่ที่ {like_user} เลือก")
             if current_likes:
                 like_cols = st.columns(min(len(current_likes), 4))
                 for i, location in enumerate(current_likes):
                     with like_cols[i % len(like_cols)]:
                         st.markdown(
-                            f"<div class=\"recommend-card\" style=\"text-align:center;\"><div style=\"font-size:1.6rem;\"><i class="fa-solid fa-location-dot"></i></div><strong>{location}</strong></div>",
+                            f"<div class=\"recommend-card\" style=\"text-align:center;\"><div style=\"font-size:1.6rem;\">📍</div><strong>{location}</strong></div>",
                             unsafe_allow_html=True,
                         )
             else:
