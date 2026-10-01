@@ -375,25 +375,11 @@ if page == "Dashboard":
                             else:
                                 st.info("ไม่มีรูปภาพ")
 
-                            # จำนวนเพื่อนที่แนะนำ
                             friend_text = ", ".join(friend_names)
 
+                            st.markdown(f"### 📍 {location_name}")
                             st.markdown(
-                                f"""
-                                <div class="recommend-card">
-
-                                    <h3 style="margin:.55rem 0 .35rem 0;">
-                                        📍 {location_name}
-                                    </h3>
-
-                                    <div class="muted">
-                                        👥 เพื่อนที่ชอบสถานที่นี้:<br>
-                                        <strong>{friend_text}</strong>
-                                    </div>
-
-                                </div>
-                                """,
-                                unsafe_allow_html=True,
+                                f"👥 **เพื่อนที่ชอบสถานที่นี้:** {friend_text}"
                             )
 
             else:
@@ -404,6 +390,7 @@ if page == "Dashboard":
 
         else:
             st.info("ยังไม่มีข้อมูลเพื่อนสำหรับสร้างคำแนะนำ")
+
 
 elif page == "Recommendations":
     st.subheader("✨ ระบบแนะนำสถานที่ถ่ายรูป")
