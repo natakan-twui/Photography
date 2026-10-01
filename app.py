@@ -925,7 +925,11 @@ elif page == "กราฟความสัมพันธ์":
                 + "</text></g>"
             )
         svg_parts = [
-            f'<svg viewBox="0 0 {width} {height}" width="{width}" height="{height}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">',
+            f'<svg viewBox="0 0 {width} {height}" '
+            f'width="100%" '
+            f'preserveAspectRatio="xMidYMid meet" '
+            f'style="display:block; margin:0 auto; overflow:visible;" '
+            f'xmlns="http://www.w3.org/2000/svg">',
         ]
         # เส้นอยู่ด้านหลังวงกลม
         for user, location in like_edges:
