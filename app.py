@@ -339,24 +339,11 @@ with st.sidebar:
     page = st.radio(
         "เมนู",
         [
-            "Dashboard",
+            "แนะนำสถานที่ถ่ายรูป",
             "จัดการคน & เพื่อน",
             "จัดการสถานที่ถ่ายรูป & การเลือก",
             "กราฟความสัมพันธ์",
         ],
-    )
-
-    st.markdown(
-        """
-        <div class="sidebar-menu-card">
-            <div class="menu-title">📋 เมนูทั้งหมด</div>
-            <div class="menu-item">📊 Dashboard</div>
-            <div class="menu-item">👥 จัดการคน & เพื่อน</div>
-            <div class="menu-item">📍 จัดการสถานที่ถ่ายรูป & การเลือก</div>
-            <div class="menu-item">🕸️ กราฟความสัมพันธ์</div>
-        </div>
-        """,
-        unsafe_allow_html=True,
     )
 
     st.markdown(
