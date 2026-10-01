@@ -384,13 +384,15 @@ if page == "Dashboard":
                                     <div style="font-size:1.1rem; font-weight:700; color:#91496A;">
                                         📍 {location_name}
                                     </div>
+                                    <div style="margin-top:.45rem; color:#9B7181; font-size:.9rem;">
+                                        👥 เพื่อนที่ชอบสถานที่นี้:<br>
+                                        <strong style="color:#91496A;">
+                                            {friend_text}
+                                        </strong>
+                                    </div>
                                 </div>
                                 """,
                                 unsafe_allow_html=True,
-                            )
-
-                            st.markdown(
-                                f"👥 **เพื่อนที่ชอบสถานที่นี้:** {friend_text}"
                             )
 
             else:
