@@ -925,8 +925,7 @@ elif page == "กราฟความสัมพันธ์":
                 + "</text></g>"
             )
         svg_parts = [
-            f'<svg viewBox="0 0 {width} {height}" width="100%" height="850" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">',
-        ]
+            f'<svg viewBox="0 0 {width} {height}" width="{width}" height="{height}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">',
         # เส้นอยู่ด้านหลังวงกลม
         for user, location in like_edges:
             p1 = edge_point("user", user)
