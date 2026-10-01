@@ -416,7 +416,7 @@ if page == "Dashboard":
     c4.metric("FRIEND", m["friends"])
 
     st.divider()
-    selected = user_selector("dash_user")
+    selected = user_selector("dashboard_user")
     profile = get_user_profile(selected)
 
     if profile:
@@ -489,7 +489,7 @@ elif page == "Recommendations":
 elif page == "User & Location":
     st.subheader("ข้อมูล User และสถานที่")
 
-    selected = user_selector("data_user")
+    selected = user_selector("dashboard_user")
     profile = get_user_profile(selected)
 
     if profile:
