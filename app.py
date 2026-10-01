@@ -404,35 +404,6 @@ if page == "Dashboard":
 
         else:
             st.info("ยังไม่มีข้อมูลเพื่อนสำหรับสร้างคำแนะนำ")
-            
-    st.subheader("ภาพรวม Graph")
-    m = get_dashboard_metrics()
-    c1, c2, c3, c4 = st.columns(4)
-    c1.metric("Users", m["users"])
-    c2.metric("Locations", m["locations"])
-    c3.metric("LIKES", m["likes"])
-    c4.metric("FRIEND", m["friends"])
-
-    st.divider()
-    selected = user_selector("dashboard_user")
-    profile = get_user_profile(selected)
-
-    if profile:
-        left, right = st.columns([1, 2])
-        with left:
-            st.markdown(f"### {profile['name']}")
-            st.write(f"**ชอบสถานที่:** {len(profile['likes'])} แห่ง")
-            st.write(f"**เพื่อน:** {len(profile['friends'])} คน")
-        with right:
-            st.markdown("### สถานที่ที่ชอบ")
-            if profile["likes"]:
-                st.dataframe(
-                    pd.DataFrame({"Location": profile["likes"]}),
-                    use_container_width=True,
-                    hide_index=True,
-                )
-            else:
-                st.info("ยังไม่มีข้อมูล LIKES")
 
 elif page == "Recommendations":
     st.subheader("✨ ระบบแนะนำสถานที่ถ่ายรูป")
