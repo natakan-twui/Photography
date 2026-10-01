@@ -406,6 +406,7 @@ if page == "Dashboard":
 
         else:
             st.info("ยังไม่มีข้อมูลเพื่อนสำหรับสร้างคำแนะนำ")
+            
     st.subheader("ภาพรวม Graph")
     m = get_dashboard_metrics()
     c1, c2, c3, c4 = st.columns(4)
