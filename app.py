@@ -1077,10 +1077,10 @@ elif page == "กราฟความสัมพันธ์":
             x, y = pos
             radius = node_radius(name, node_type)
             if node_type == "user":
-                fill = "#CFECF3"
+                fill = "#FF80C7"
                 text_color = "#413C66"
             else:
-                fill = "#DAF9DE"
+                fill = "#FFBDA3"
                 text_color = "#6A4A1F"
 
             stroke = "#FFFFFF"
