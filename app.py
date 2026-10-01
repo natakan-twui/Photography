@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import pandas as pd
 import streamlit as st
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
 
 from neo4j_service import (
     create_schema,
@@ -149,10 +152,22 @@ elif page == "Recommendations":
         for i, row in enumerate(rows, start=1):
             image_col, info_col = st.columns([1, 2])
             with image_col:
-                if row.get("image"):
-                    st.image(row["image"], use_container_width=True)
-                else:
-                    st.info("ไม่มีรูปภาพ")
+    image_file = row.get("image")
+
+    if image_file:
+        image_path = BASE_DIR / image_file
+
+        if image_path.exists():
+            st.image(
+                str(image_path),
+                use_container_width=True
+            )
+        else:
+            st.warning(
+                f"ไม่พบไฟล์รูป: {image_path.name}"
+            )
+    else:
+        st.info("ไม่มีรูปภาพ")
             with info_col:
                 st.markdown(
                     f"""
