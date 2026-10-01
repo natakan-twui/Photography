@@ -1063,7 +1063,7 @@ elif page == "กราฟความสัมพันธ์":
 
         def svg_line(x1: float, y1: float, x2: float, y2: float, dashed: bool = False) -> str:
             dash = ' stroke-dasharray="8 7"' if dashed else ""
-            edge_color = "#CFECF3" if dashed else "#DAF9DE"
+            edge_color = "#3A86FF" if dashed else "#BDB2FF"
             edge_width = "2.2" if dashed else "3.2"
             return (
                 f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" '
@@ -1077,10 +1077,10 @@ elif page == "กราฟความสัมพันธ์":
             x, y = pos
             radius = node_radius(name, node_type)
             if node_type == "user":
-                fill = "#FF80C7"
+                fill = "#3A86FF"
                 text_color = "#413C66"
             else:
-                fill = "#FFBDA3"
+                fill = "#BDB2FF"
                 text_color = "#6A4A1F"
 
             stroke = "#FFFFFF"
