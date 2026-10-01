@@ -832,6 +832,7 @@ elif page == "กราฟความสัมพันธ์":
         st.info("ยังไม่มีข้อมูลสำหรับแสดงกราฟ")
     else:
         width, height = 1400, 850
+        GRAPH_SCALE = 1.3
         cx, cy = width / 2, height / 2
         positions: dict[tuple[str, str], tuple[float, float]] = {}
         # เลือกคน: คนที่เลือกอยู่ตรงกลาง เพื่อนล้อมรอบ และสถานที่อยู่รอบนอก
@@ -844,7 +845,7 @@ elif page == "กราฟความสัมพันธ์":
             )
             liked_locations = sorted(location_nodes)
             if friends:
-                friend_radius = 300
+                friend_radius = 300 * GRAPH_SCALE
                 for i, name in enumerate(friends):
                     angle = -math.pi / 2 + (2 * math.pi * i / len(friends))
                     positions[("user", name)] = (
@@ -852,7 +853,7 @@ elif page == "กราฟความสัมพันธ์":
                         cy + friend_radius * math.sin(angle),
                     )
             if liked_locations:
-                location_radius = 450
+                location_radius = 450 * GRAPH_SCALE
                 for i, name in enumerate(liked_locations):
                     angle = -math.pi / 2 + (2 * math.pi * i / len(liked_locations))
                     positions[("location", name)] = (
@@ -863,8 +864,8 @@ elif page == "กราฟความสัมพันธ์":
             # ทั้งหมด: User อยู่ในวงใน / Location อยู่ในวงนอก
             users_sorted = sorted(user_nodes)
             locations_sorted = sorted(location_nodes)
-            user_radius = 175 if len(users_sorted) <= 10 else 215
-            location_radius = 315
+            user_radius = (175 if len(users_sorted) <= 10 else 215) * GRAPH_SCALE
+            location_radius = 315 * GRAPH_SCALE
             for i, name in enumerate(users_sorted):
                 angle = -math.pi / 2 + (2 * math.pi * i / max(1, len(users_sorted)))
                 positions[("user", name)] = (
