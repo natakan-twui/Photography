@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import hashlib
+import re
+from pathlib import Path
+
 import pandas as pd
 import streamlit as st
-from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -200,6 +203,57 @@ hr {
     border-radius: 14px;
 }
 
+/* ===== Sidebar Project Info ===== */
+.sidebar-project-card {
+    margin-top: .9rem;
+    padding: .95rem;
+    border-radius: 16px;
+    background: rgba(255,255,255,.72);
+    border: 1px solid #F3C4D6;
+}
+
+.sidebar-project-card .title {
+    color: #91496A;
+    font-weight: 700;
+    margin-bottom: .45rem;
+}
+
+.sidebar-project-card .info {
+    color: #8B6575;
+    font-size: .86rem;
+    line-height: 1.7;
+}
+
+.sidebar-menu-card {
+    margin-top: .75rem;
+    padding: .85rem .95rem;
+    border-radius: 16px;
+    background: rgba(255,255,255,.58);
+    border: 1px solid #F3C4D6;
+}
+
+.sidebar-menu-card .menu-title {
+    color: #91496A;
+    font-weight: 700;
+    margin-bottom: .4rem;
+}
+
+.sidebar-menu-card .menu-item {
+    color: #8B6575;
+    font-size: .84rem;
+    line-height: 1.8;
+}
+
+/* ===== Graph ===== */
+.graph-card {
+    padding: .85rem 1rem;
+    border: 1px solid #F3C4D6;
+    border-radius: 16px;
+    background: #FFFFFF;
+    box-shadow: 0 4px 14px rgba(190, 100, 135, 0.08);
+    margin-bottom: 1rem;
+}
+
 /* ===== Management Tabs ===== */
 .stTabs [data-baseweb="tab-list"] {
     gap: .4rem;
@@ -271,10 +325,52 @@ require_connection()
 with st.sidebar:
     st.markdown("## 📷 Photography Graph")
     st.caption("Neo4j Aura + Streamlit")
+
+    st.link_button(
+        "↩️ กลับหน้ารวมโปรเจกต์",
+        "https://natakan-twui.github.io/Photography/",
+        use_container_width=True,
+    )
+
+    st.divider()
+
     page = st.radio(
         "เมนู",
-        ["Dashboard", "จัดการคน & เพื่อน", "จัดการสถานที่ถ่ายรูป & การเลือก", "กราฟความสัมพันธ์"],
+        [
+            "Dashboard",
+            "จัดการคน & เพื่อน",
+            "จัดการสถานที่ถ่ายรูป & การเลือก",
+            "กราฟความสัมพันธ์",
+        ],
     )
+
+    st.markdown(
+        """
+        <div class="sidebar-menu-card">
+            <div class="menu-title">📋 เมนูทั้งหมด</div>
+            <div class="menu-item">📊 Dashboard</div>
+            <div class="menu-item">👥 จัดการคน & เพื่อน</div>
+            <div class="menu-item">📍 จัดการสถานที่ถ่ายรูป & การเลือก</div>
+            <div class="menu-item">🕸️ กราฟความสัมพันธ์</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    st.markdown(
+        """
+        <div class="sidebar-project-card">
+            <div class="title">👤 ผู้จัดทำ</div>
+            <div class="info">
+                ณฐกาญจน์ โพธิ์ทอง<br>
+                รหัส: 664245006<br>
+                ห้อง: 66/43
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
     st.divider()
     st.caption("Photography Location Recommender")
 
@@ -639,17 +735,18 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
     # =========================================================
     with tab_location:
         st.markdown("### 📍 เพิ่มสถานที่ถ่ายรูป")
-        st.write("เพิ่ม Location ใหม่เป็นโหนด `Location` ใน Neo4j")
+        st.write("เพิ่มสถานที่ใหม่พร้อมแนบรูปภาพลงในระบบ")
 
         with st.form("add_location_form", clear_on_submit=True):
             new_location_name = st.text_input(
                 "ชื่อสถานที่",
                 placeholder="เช่น Siam Square",
             ).strip()
-            new_location_image = st.text_input(
-                "URL รูปภาพ (ไม่บังคับ)",
-                placeholder="https://...",
-            ).strip()
+            new_location_image = st.file_uploader(
+                "รูปภาพ",
+                type=["jpg", "jpeg", "png", "webp"],
+                help="รองรับ JPG, JPEG, PNG และ WEBP",
+            )
             submit_add_location = st.form_submit_button(
                 "เพิ่มสถานที่",
                 type="primary",
@@ -659,12 +756,34 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
         if submit_add_location:
             if not new_location_name:
                 st.warning("กรุณากรอกชื่อสถานที่")
+            elif new_location_image is None:
+                st.warning("กรุณาแนบรูปภาพสถานที่")
             else:
                 try:
                     if any(l["name"] == new_location_name for l in get_locations()):
                         st.warning(f"มีสถานที่ชื่อ {new_location_name} อยู่แล้ว")
                     else:
-                        create_location(new_location_name, new_location_image)
+                        locations_dir = BASE_DIR / "assets" / "locations"
+                        locations_dir.mkdir(parents=True, exist_ok=True)
+
+                        original_suffix = Path(new_location_image.name).suffix.lower()
+                        safe_name = re.sub(
+                            r"[^0-9A-Za-zก-๙_-]+",
+                            "_",
+                            new_location_name,
+                        ).strip("_")
+                        if not safe_name:
+                            safe_name = "location"
+
+                        file_hash = hashlib.sha1(
+                            new_location_image.getvalue()
+                        ).hexdigest()[:10]
+                        image_filename = f"{safe_name}_{file_hash}{original_suffix}"
+                        image_path = locations_dir / image_filename
+                        image_path.write_bytes(new_location_image.getvalue())
+
+                        image_db_path = f"assets/locations/{image_filename}"
+                        create_location(new_location_name, image_db_path)
                         st.success(f"เพิ่มสถานที่ {new_location_name} สำเร็จ")
                         st.rerun()
                 except Exception as exc:
@@ -672,16 +791,44 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
                     st.exception(exc)
 
         st.divider()
-        st.markdown("### 📋 สถานที่ในระบบ")
+        st.markdown("### 📋 สถานที่ถ่ายรูปทั้งหมด")
         locations = get_locations()
         if locations:
-            st.dataframe(
-                pd.DataFrame(locations).rename(columns={"name": "สถานที่", "image": "รูปภาพ"}),
-                use_container_width=True,
-                hide_index=True,
-            )
+            for row_start in range(0, len(locations), 4):
+                row_items = locations[row_start:row_start + 4]
+                cols = st.columns(4)
+
+                for col, location in zip(cols, row_items):
+                    with col:
+                        image_value = location.get("image")
+                        if image_value:
+                            image_path = BASE_DIR / str(image_value)
+                            if image_path.exists():
+                                st.image(
+                                    str(image_path),
+                                    caption="รูปภาพ",
+                                    use_container_width=True,
+                                )
+                            elif str(image_value).startswith(("http://", "https://")):
+                                st.image(
+                                    str(image_value),
+                                    caption="รูปภาพ",
+                                    use_container_width=True,
+                                )
+                            else:
+                                st.info("ไม่พบรูปภาพ")
+                        else:
+                            st.info("ไม่มีรูปภาพ")
+
+                        card_html = (
+                            '<div class="recommend-card" style="margin-top:-.35rem; text-align:center;">'
+                            '<div style="color:#9B7181; font-size:.78rem;">ชื่อสถานที่</div>'
+                            f'<div style="font-size:1.05rem; font-weight:700; color:#91496A; margin-top:.2rem;">📍 {location["name"]}</div>'
+                            '</div>'
+                        )
+                        st.markdown(card_html, unsafe_allow_html=True)
         else:
-            st.info("ยังไม่มีสถานที่")
+            st.info("ยังไม่มีสถานที่ถ่ายรูป")
 
     # =========================================================
     # จัดการ LIKES
@@ -700,11 +847,7 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
             with c1:
                 like_user = st.selectbox("เลือก User", user_names, key="like_user")
             with c2:
-                like_location = st.selectbox(
-                    "เลือกสถานที่",
-                    location_names,
-                    key="like_location",
-                )
+                like_location = st.selectbox("เลือกสถานที่", location_names, key="like_location")
 
             current_likes = get_user_likes(like_user)
             st.markdown(f"### ❤️ สถานที่ที่ {like_user} เลือก")
@@ -714,12 +857,7 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
                 for i, location in enumerate(current_likes):
                     with like_cols[i % len(like_cols)]:
                         st.markdown(
-                            f"""
-                            <div class="recommend-card" style="text-align:center;">
-                                <div style="font-size:1.6rem;">📍</div>
-                                <strong>{location}</strong>
-                            </div>
-                            """,
+                            f"<div class=\"recommend-card\" style=\"text-align:center;\"><div style=\"font-size:1.6rem;\">📍</div><strong>{location}</strong></div>",
                             unsafe_allow_html=True,
                         )
             else:
@@ -728,12 +866,7 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
             if like_location in current_likes:
                 st.warning(f"{like_user} เลือก {like_location} อยู่แล้ว")
             else:
-                if st.button(
-                    "❤️ เพิ่มการเลือก",
-                    type="primary",
-                    use_container_width=True,
-                    key="add_like_button",
-                ):
+                if st.button("❤️ เพิ่มการเลือก", type="primary", use_container_width=True, key="add_like_button"):
                     try:
                         add_like(like_user, like_location)
                         st.success(f"เพิ่ม {like_user} → {like_location} แล้ว")
@@ -744,16 +877,8 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
 
             st.divider()
             if current_likes:
-                remove_location = st.selectbox(
-                    "เลือกสถานที่ที่ต้องการยกเลิกการเลือก",
-                    current_likes,
-                    key="remove_like_location",
-                )
-                if st.button(
-                    "💔 ยกเลิกการเลือก",
-                    use_container_width=True,
-                    key="remove_like_button",
-                ):
+                remove_location = st.selectbox("เลือกสถานที่ที่ต้องการยกเลิกการเลือก", current_likes, key="remove_like_location")
+                if st.button("💔 ยกเลิกการเลือก", use_container_width=True, key="remove_like_button"):
                     try:
                         remove_like(like_user, remove_location)
                         st.success(f"ยกเลิก {like_user} → {remove_location} แล้ว")
@@ -773,22 +898,13 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
         if not location_names:
             st.info("ยังไม่มีสถานที่ให้ลบ")
         else:
-            delete_location_name = st.selectbox(
-                "เลือกสถานที่ที่จะลบ",
-                location_names,
-                key="delete_location_name",
-            )
+            delete_location_name = st.selectbox("เลือกสถานที่ที่จะลบ", location_names, key="delete_location_name")
             confirm_location = st.checkbox(
                 f"ฉันยืนยันการลบ {delete_location_name}",
                 key=f"confirm_delete_location_{delete_location_name}",
             )
 
-            if st.button(
-                "🗑️ ลบสถานที่",
-                type="primary",
-                use_container_width=True,
-                key="delete_location_button",
-            ):
+            if st.button("🗑️ ลบสถานที่", type="primary", use_container_width=True, key="delete_location_button"):
                 if not confirm_location:
                     st.warning("กรุณาติ๊กยืนยันก่อนลบ")
                 else:
@@ -803,91 +919,192 @@ elif page == "จัดการสถานที่ถ่ายรูป & ก
 
 elif page == "กราฟความสัมพันธ์":
     st.subheader("🕸️ กราฟความสัมพันธ์")
-    st.caption("ดูโครงสร้าง User, Location, LIKES และ FRIEND ที่เก็บอยู่ใน Neo4j")
+    st.caption("เลือกชื่อคนเพื่อดูเฉพาะความสัมพันธ์ของคนนั้น หรือเลือกทั้งหมดเพื่อดู Graph ทั้งระบบ")
 
-    graph_tab_all, graph_tab_likes, graph_tab_friends, graph_tab_user = st.tabs(
-        ["🌐 ภาพรวม", "❤️ User → Location", "👥 User ↔ User", "🧭 รายบุคคล"]
+    user_names = [u["name"] for u in get_users()]
+    graph_options = ["ทั้งหมด"] + user_names
+
+    st.markdown("### 👤 ชื่อคน")
+    selected_graph_user = st.selectbox(
+        "ชื่อคน",
+        graph_options,
+        key="relationship_graph_user",
+        label_visibility="collapsed",
     )
 
-    with graph_tab_all:
-        st.markdown("### 🌐 ภาพรวมความสัมพันธ์")
-        rows_likes = graph_likes()
-        rows_friends = graph_users()
+    rows_likes = graph_likes()
+    rows_friends = graph_users()
 
-        m = get_dashboard_metrics()
-        c1, c2, c3, c4 = st.columns(4)
-        c1.metric("คน", m["users"])
-        c2.metric("สถานที่", m["locations"])
-        c3.metric("LIKES", m["likes"])
-        c4.metric("FRIEND", m["friends"])
+    # ===== เตรียมข้อมูลกราฟตามคนที่เลือก =====
+    if selected_graph_user == "ทั้งหมด":
+        graph_likes_rows = rows_likes
+        graph_friend_rows = rows_friends
+    else:
+        graph_likes_rows = [
+            row for row in rows_likes
+            if row["user"] == selected_graph_user
+        ]
+        graph_friend_rows = [
+            row for row in rows_friends
+            if row["user1"] == selected_graph_user
+            or row["user2"] == selected_graph_user
+        ]
 
-        try:
-            import networkx as nx
-            import matplotlib.pyplot as plt
+    # ===== สร้าง NetworkX Graph =====
+    try:
+        import networkx as nx
+        import matplotlib.pyplot as plt
+        from matplotlib.lines import Line2D
 
-            G = nx.Graph()
-            for row in rows_likes:
-                G.add_node(row["user"], node_type="user")
-                G.add_node(row["location"], node_type="location")
-                G.add_edge(row["user"], row["location"], relation="LIKES")
-            for row in rows_friends:
-                G.add_node(row["user1"], node_type="user")
-                G.add_node(row["user2"], node_type="user")
-                G.add_edge(row["user1"], row["user2"], relation="FRIEND")
+        G = nx.Graph()
 
-            if G.number_of_nodes():
-                fig, ax = plt.subplots(figsize=(14, 9))
-                pos = nx.spring_layout(G, seed=42)
-                nx.draw(
-                    G,
-                    pos,
-                    with_labels=True,
-                    node_size=2200,
-                    font_size=9,
-                    ax=ax,
-                )
-                ax.set_title("Photography Location Recommender Graph")
-                st.pyplot(fig)
-                plt.close(fig)
+        for row in graph_likes_rows:
+            G.add_node(row["user"], node_type="user")
+            G.add_node(row["location"], node_type="location")
+            G.add_edge(row["user"], row["location"], relation="LIKES")
+
+        for row in graph_friend_rows:
+            G.add_node(row["user1"], node_type="user")
+            G.add_node(row["user2"], node_type="user")
+            G.add_edge(row["user1"], row["user2"], relation="FRIEND")
+
+        # กรณีเลือกชื่อคนที่ยังไม่มีความสัมพันธ์ ให้แสดงตัวคนไว้ด้วย
+        if selected_graph_user != "ทั้งหมด":
+            G.add_node(selected_graph_user, node_type="user")
+
+        if G.number_of_nodes() == 0:
+            st.info("ยังไม่มีข้อมูลสำหรับแสดงกราฟ")
+        else:
+            user_nodes = [
+                node for node, data in G.nodes(data=True)
+                if data.get("node_type") == "user"
+            ]
+            location_nodes = [
+                node for node, data in G.nodes(data=True)
+                if data.get("node_type") == "location"
+            ]
+
+            # จัดตำแหน่งให้ User อยู่ด้านบนและ Location อยู่ด้านล่าง
+            pos = {}
+            if selected_graph_user != "ทั้งหมด":
+                center = selected_graph_user
+                friends = [
+                    n for n in user_nodes
+                    if n != center and G.has_edge(center, n)
+                    and G.edges[center, n].get("relation") == "FRIEND"
+                ]
+                liked_locations = [
+                    n for n in location_nodes
+                    if G.has_edge(center, n)
+                    and G.edges[center, n].get("relation") == "LIKES"
+                ]
+
+                pos[center] = (0, 1.0)
+                if friends:
+                    friend_positions = nx.circular_layout(friends, scale=2.2)
+                    for n, xy in friend_positions.items():
+                        pos[n] = (float(xy[0]), float(xy[1]) + 0.15)
+                if liked_locations:
+                    location_positions = nx.circular_layout(liked_locations, scale=2.7)
+                    for n, xy in location_positions.items():
+                        pos[n] = (float(xy[0]), float(xy[1]) - 1.7)
+
+                # เติมตำแหน่งให้กรณีมีโหนดอื่นจากข้อมูล
+                missing = [n for n in G.nodes if n not in pos]
+                if missing:
+                    extra_pos = nx.spring_layout(G.subgraph(missing), seed=42, scale=2.0)
+                    for n, xy in extra_pos.items():
+                        pos[n] = (float(xy[0]), float(xy[1]))
             else:
-                st.info("ยังไม่มีข้อมูลสำหรับวาดกราฟ")
-        except Exception as exc:
-            st.warning(f"ไม่สามารถวาดกราฟได้: {exc}")
+                pos = nx.spring_layout(G, seed=42, k=1.7, iterations=120)
 
-    with graph_tab_likes:
-        st.markdown("### ❤️ User → Location")
-        rows = graph_likes()
-        if rows:
-            st.dataframe(
-                pd.DataFrame(rows),
-                use_container_width=True,
-                hide_index=True,
-            )
-        else:
-            st.info("ยังไม่มีความสัมพันธ์ LIKES")
+            fig, ax = plt.subplots(figsize=(15, 9))
+            fig.patch.set_facecolor("#FFF8FB")
+            ax.set_facecolor("#FFF8FB")
 
-    with graph_tab_friends:
-        st.markdown("### 👥 User ↔ User")
-        rows = graph_users()
-        if rows:
-            st.dataframe(
-                pd.DataFrame(rows),
-                use_container_width=True,
-                hide_index=True,
-            )
-        else:
-            st.info("ยังไม่มีความสัมพันธ์ FRIEND")
+            user_color = "#E88EAE"
+            location_color = "#A8D8EA"
+            edge_like_color = "#E9A6BF"
+            edge_friend_color = "#B99ACB"
 
-    with graph_tab_user:
-        st.markdown("### 🧭 ดูความสัมพันธ์ของ User ที่เลือก")
-        selected = user_selector("graph_user")
-        rows = graph_neighborhood(selected)
-        if rows:
-            st.dataframe(
-                pd.DataFrame(rows),
-                use_container_width=True,
-                hide_index=True,
+            # วาดเส้นแยกตามประเภทความสัมพันธ์
+            like_edges = [
+                (u, v) for u, v, data in G.edges(data=True)
+                if data.get("relation") == "LIKES"
+            ]
+            friend_edges = [
+                (u, v) for u, v, data in G.edges(data=True)
+                if data.get("relation") == "FRIEND"
+            ]
+
+            nx.draw_networkx_edges(
+                G, pos, edgelist=like_edges, ax=ax,
+                edge_color=edge_like_color, width=2.0,
+                alpha=.8, arrows=False,
             )
-        else:
-            st.info("ไม่พบความสัมพันธ์ของ User นี้")
+            nx.draw_networkx_edges(
+                G, pos, edgelist=friend_edges, ax=ax,
+                edge_color=edge_friend_color, width=2.8,
+                style="dashed", alpha=.9,
+            )
+
+            nx.draw_networkx_nodes(
+                G, pos, nodelist=user_nodes, ax=ax,
+                node_color=user_color, node_size=2600,
+                edgecolors="#FFFFFF", linewidths=2.5,
+            )
+            nx.draw_networkx_nodes(
+                G, pos, nodelist=location_nodes, ax=ax,
+                node_color=location_color, node_size=3000,
+                node_shape="s", edgecolors="#FFFFFF", linewidths=2.5,
+            )
+
+            nx.draw_networkx_labels(
+                G, pos, ax=ax, font_size=10,
+                font_weight="bold", font_color="#713B55",
+            )
+
+            legend_items = [
+                Line2D([0], [0], marker="o", color="w", label="คน",
+                       markerfacecolor=user_color, markeredgecolor="white", markersize=13),
+                Line2D([0], [0], marker="s", color="w", label="สถานที่ถ่ายรูป",
+                       markerfacecolor=location_color, markeredgecolor="white", markersize=13),
+                Line2D([0], [0], color=edge_like_color, lw=3, label="LIKES"),
+                Line2D([0], [0], color=edge_friend_color, lw=3, ls="--", label="FRIEND"),
+            ]
+            ax.legend(
+                handles=legend_items, loc="upper left",
+                frameon=True, fancybox=True, framealpha=.95,
+                facecolor="white", edgecolor="#F3C4D6",
+            )
+
+            title = (
+                "กราฟความสัมพันธ์ทั้งหมด"
+                if selected_graph_user == "ทั้งหมด"
+                else f"กราฟความสัมพันธ์ของ {selected_graph_user}"
+            )
+            ax.set_title(
+                title, fontsize=18, fontweight="bold",
+                color="#91496A", pad=18,
+            )
+            ax.axis("off")
+            plt.tight_layout()
+            st.pyplot(fig, use_container_width=True)
+            plt.close(fig)
+
+            st.markdown(
+                f"""
+                <div class="graph-card">
+                    <strong>📌 กำลังแสดง: {selected_graph_user}</strong><br>
+                    <span class="muted">
+                        คน {len(user_nodes)} คน · สถานที่ {len(location_nodes)} แห่ง ·
+                        LIKES {len(like_edges)} รายการ · FRIEND {len(friend_edges)} ความสัมพันธ์
+                    </span>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
+    except Exception as exc:
+        st.warning(f"ไม่สามารถวาดกราฟได้: {exc}")
 
