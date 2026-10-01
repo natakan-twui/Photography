@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Assignments & Projects</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            background: #fff7fb;
+            color: #5f4653;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           Header
+        ========================= */
+
+        header {
+            text-align: center;
+            padding: 70px 20px 55px;
+            background: linear-gradient(
+                135deg,
+                #fbcfe8,
+                #f9a8d4,
+                #fce7f3
+            );
+        }
+
+        .header-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        header h1 {
+            font-size: 38px;
+            color: #713b55;
+            margin-bottom: 12px;
+        }
+
+        header p {
+            font-size: 17px;
+            color: #81566b;
+        }
+
+        /* =========================
+           Main
+        ========================= */
+
+        main {
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 55px 20px 70px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .section-title h2 {
+            font-size: 28px;
+            color: #91496a;
+            margin-bottom: 8px;
+        }
+
+        .section-title p {
+            color: #9b7181;
+            font-size: 15px;
+        }
+
+        /* =========================
+           Cards
+        ========================= */
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #f3c4d6;
+            border-radius: 22px;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            min-height: 340px;
+            box-shadow: 0 8px 25px rgba(190, 100, 135, 0.08);
+            transition: 0.25s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 14px 32px rgba(190, 100, 135, 0.15);
+        }
+
+        .card-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fce7f3;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .card.new-project .card-icon {
+            background: #fbcfe8;
+        }
+
+        .card h3 {
+            color: #91496a;
+            font-size: 21px;
+            margin-bottom: 12px;
+        }
+
+        .card .tag {
+            display: inline-block;
+            width: fit-content;
+            padding: 5px 11px;
+            border-radius: 999px;
+            background: #fce7f3;
+            color: #a44f75;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .card.new-project .tag {
+            background: #fbcfe8;
+            color: #91496a;
+        }
+
+        .card p {
+            color: #806875;
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        /* =========================
+           Buttons
+        ========================= */
+
+        .buttons {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            padding: 11px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .btn-primary {
+            background: #f4a6c1;
+            color: #ffffff;
+            border: 1px solid #e8a6be;
+        }
+
+        .btn-primary:hover {
+            background: #e88eae;
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: #a44f75;
+            border: 1px solid #e8a6be;
+        }
+
+        .btn-secondary:hover {
+            background: #fff0f6;
+        }
+
+        .btn-system {
+            background: #d978a0;
+            color: #ffffff;
+            border: 1px solid #d978a0;
+        }
+
+        .btn-system:hover {
+            background: #c9628b;
+        }
+
+        /* =========================
+           Presentation
+        ========================= */
+
+        .presentation {
+            margin-top: 55px;
+            background: #ffffff;
+            border: 1px solid #f3c4d6;
+            border-radius: 22px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(190, 100, 135, 0.07);
+        }
+
+        .presentation h2 {
+            color: #91496a;
+            margin-bottom: 10px;
+        }
+
+        .presentation p {
+            color: #806875;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .presentation .btn {
+            display: inline-block;
+            min-width: 210px;
+        }
+
+        /* =========================
+           Footer
+        ========================= */
+
+        footer {
+            text-align: center;
+            padding: 25px 20px;
+            border-top: 1px solid #f3c4d6;
+            color: #a17a89;
+            font-size: 13px;
+            background: #fffafd;
+        }
+
+        /* =========================
+           Responsive
+        ========================= */
+
+        @media (max-width: 900px) {
+            .cards {
+                grid-template-columns: 1fr;
+                max-width: 550px;
+                margin: 0 auto;
+            }
+
+            header h1 {
+                font-size: 31px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            header {
+                padding: 50px 20px 40px;
+            }
+
+            header h1 {
+                font-size: 27px;
+            }
+
+            header p {
+                font-size: 15px;
+            }
+
+            main {
+                padding: 40px 15px 55px;
+            }
+
+            .card {
+                padding: 23px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================
+         Header
+    ========================== -->
+
+    <header>
+        <div class="header-icon">📚</div>
+
+        <h1>My Assignments & Projects</h1>
+
+        <p>
+            รวมการบ้านและโปรเจกต์ที่พัฒนาขึ้นในรายวิชา
+        </p>
+    </header>
+
+
+    <!-- =========================
+         Main
+    ========================== -->
+
+    <main>
+
+        <div class="section-title">
+            <h2>📚 Assignments</h2>
+
+            <p>
+                รวมผลงานการบ้านและโปรเจกต์ทั้งหมด
+            </p>
+        </div>
+
+
+        <!-- Cards -->
+
+        <div class="cards">
+
+            <!-- Assignment 01 -->
+
+            <div class="card">
+
+                <div class="card-icon">
+                    📝
+                </div>
+
+                <span class="tag">
+                    Assignment 01
+                </span>
+
+                <h3>
+                    Assignment 01
+                </h3>
+
+                <p>
+                    การบ้านชิ้นที่ 1 ของรายวิชา
+                    สามารถเปิดดู Notebook และไฟล์งานบน GitHub ได้
+                </p>
+
+                <div class="buttons">
+
+                    <!-- แก้ลิงก์ตรงนี้ -->
+                    <a
+                        href="YOUR_COLAB_LINK_01"
+                        target="_blank"
+                        class="btn btn-primary"
+                    >
+                        เปิดการบ้านใน Colab
+                    </a>
+
+                    <!-- แก้ลิงก์ตรงนี้ -->
+                    <a
+                        href="YOUR_GITHUB_LINK_01"
+                        target="_blank"
+                        class="btn btn-secondary"
+                    >
+                        ดูไฟล์บน GitHub
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- Assignment 02 -->
+
+            <div class="card">
+
+                <div class="card-icon">
+                    📊
+                </div>
+
+                <span class="tag">
+                    Assignment 02
+                </span>
+
+                <h3>
+                    Assignment 02
+                </h3>
+
+                <p>
+                    การบ้านชิ้นที่ 2 ของรายวิชา
+                    สามารถเปิดดู Notebook และไฟล์งานบน GitHub ได้
+                </p>
+
+                <div class="buttons">
+
+                    <!-- แก้ลิงก์ตรงนี้ -->
+                    <a
+                        href="YOUR_COLAB_LINK_02"
+                        target="_blank"
+                        class="btn btn-primary"
+                    >
+                        เปิดการบ้านใน Colab
+                    </a>
+
+                    <!-- แก้ลิงก์ตรงนี้ -->
+                    <a
+                        href="YOUR_GITHUB_LINK_02"
+                        target="_blank"
+                        class="btn btn-secondary"
+                    >
+                        ดูไฟล์บน GitHub
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- Assignment 03 -->
+
+            <div class="card new-project">
+
+                <div class="card-icon">
+                    📷
+                </div>
+
+                <span class="tag">
+                    Assignment 03 · Graph Database
+                </span>
+
+                <h3>
+                    Photography Location Recommender
+                </h3>
+
+                <p>
+                    ระบบแนะนำสถานที่ถ่ายภาพ โดยใช้ Neo4j Aura,
+                    Cypher และ Streamlit พร้อมแสดงรูปภาพสถานที่
+                    และแนะนำสถานที่จากความสนใจของผู้ใช้
+                </p>
+
+                <div class="buttons">
+
+                    <!-- แก้เป็นลิงก์ Streamlit -->
+                    <a
+                        href="YOUR_STREAMLIT_LINK"
+                        target="_blank"
+                        class="btn btn-system"
+                    >
+                        🚀 เข้าสู่ระบบแนะนำ
+                    </a>
+
+                    <!-- แก้เป็นลิงก์ GitHub project -->
+                    <a
+                        href="YOUR_PROJECT_GITHUB_LINK"
+                        target="_blank"
+                        class="btn btn-secondary"
+                    >
+                        💻 ดูโค้ดโปรเจกต์บน GitHub
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             Presentation
+        ========================== -->
+
+        <div class="presentation">
+
+            <h2>📊 Presentation</h2>
+
+            <p>
+                PowerPoint สำหรับนำเสนอโปรเจกต์
+                Photography Location Recommender
+            </p>
+
+            <!-- แก้ลิงก์ PowerPoint -->
+            <a
+                href="Powerpoint/Photography.pptx"
+                class="btn btn-primary"
+                target="_blank"
+            >
+                เปิด PowerPoint
+            </a>
+
+        </div>
+
+    </main>
+
+</body>
+</html>
