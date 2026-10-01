@@ -35,16 +35,16 @@ LIKES = [
 
 
 LOCATION_IMAGES = {
-    "ICONSIAM": "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1200&q=80",
-    "Talad Noi": "https://images.unsplash.com/photo-1528181304800-259b08848526?auto=format&fit=crop&w=1200&q=80",
-    "Asiatique The Riverfront": "https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=1200&q=80",
-    "Benjakitti Park": "https://images.unsplash.com/photo-1470214304380-aadaedcfff1b?auto=format&fit=crop&w=1200&q=80",
-    "Chatuchak Weekend Market": "https://images.unsplash.com/photo-1523731407965-2430cd12f5e4?auto=format&fit=crop&w=1200&q=80",
-    "The Commons Thonglor": "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80",
-    "Wat Arun": "https://images.unsplash.com/photo-1563492065599-3520f775eeed?auto=format&fit=crop&w=1200&q=80",
-    "Yaowarat": "https://images.unsplash.com/photo-1528181304800-259b08848526?auto=format&fit=crop&w=1200&q=80",
-    "Bangkok Art and Culture Centre": "https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&w=1200&q=80",
-    "Ancient City": "https://images.unsplash.com/photo-1506665531195-3566af2b4dfa?auto=format&fit=crop&w=1200&q=80",
+    "ICONSIAM": "assets/locations/iconsiam.jpg",
+    "Talad Noi": "assets/locations/talad_noi.jpg",
+    "Asiatique The Riverfront": "assets/locations/asiatique_the_riverfront.jpg",
+    "Benjakitti Park": "assets/locations/benjakitti_park.jpg",
+    "Chatuchak Weekend Market": "assets/locations/chatuchak_weekend_market.jpg",
+    "The Commons Thonglor": "assets/locations/the_commons_thonglor.jpg",
+    "Wat Arun": "assets/locations/wat_arun.jpg",
+    "Yaowarat": "assets/locations/yaowarat.jpg",
+    "Bangkok Art and Culture Centre": "assets/locations/bangkok_art_and_culture_centre.jpg",
+    "Ancient City": "assets/locations/ancient_city.jpg",
 }
 
 FRIENDSHIPS = [
