@@ -831,7 +831,7 @@ elif page == "กราฟความสัมพันธ์":
     if not user_nodes and not location_nodes:
         st.info("ยังไม่มีข้อมูลสำหรับแสดงกราฟ")
     else:
-        width, height = 1400, 850
+        width, height = 1800, 1100
         GRAPH_SCALE = 1.5
         cx, cy = width / 2, height / 2
         positions: dict[tuple[str, str], tuple[float, float]] = {}
@@ -853,7 +853,7 @@ elif page == "กราฟความสัมพันธ์":
                         cy + friend_radius * math.sin(angle),
                     )
             if liked_locations:
-                location_radius = 450 * GRAPH_SCALE
+                location_radius = 500 * GRAPH_SCALE
                 for i, name in enumerate(liked_locations):
                     angle = -math.pi / 2 + (2 * math.pi * i / len(liked_locations))
                     positions[("location", name)] = (
@@ -943,7 +943,10 @@ elif page == "กราฟความสัมพันธ์":
         for name in sorted(location_nodes):
             svg_parts.append(svg_node("location", name))
         svg_parts.append("</svg>")
-        st.components.v1.html("".join(svg_parts), height=875, scrolling=False)
+        st.markdown(
+            "".join(svg_parts),
+            unsafe_allow_html=True
+        )
         st.markdown(
             f"""
             <div class="graph-card">
