@@ -928,7 +928,7 @@ elif page == "กราฟความสัมพันธ์":
             f'<svg viewBox="0 0 {width} {height}" '
             f'width="100%" '
             f'preserveAspectRatio="xMidYMid meet" '
-            f'style="display:block; margin:0 auto; overflow:visible;" '
+            f'style="display:block; margin:0 auto;" '
             f'xmlns="http://www.w3.org/2000/svg">',
         ]
         # เส้นอยู่ด้านหลังวงกลม
