@@ -831,17 +831,16 @@ elif page == "กราฟความสัมพันธ์":
     if not user_nodes and not location_nodes:
         st.info("ยังไม่มีข้อมูลสำหรับแสดงกราฟ")
     else:
-        width, height = 1800, 1100
-
-        cx = width / 2
-        cy = height / 2
+        width, height = 1800, 1100 
+        GRAPH_SCALE = 1.5 
+        cx, cy = width / 2, height / 2
 
         if selected_graph_user == "ทั้งหมด":
-            friend_radius = 350
-            location_radius = 500
+            friend_radius = 350 * GRAPH_SCALE
+            location_radius = 500 * GRAPH_SCALE
         else:
-            friend_radius = 220
-            location_radius = 320
+            friend_radius = 220 * GRAPH_SCALE
+            location_radius = 320 * GRAPH_SCALE
         positions: dict[tuple[str, str], tuple[float, float]] = {}
         # เลือกคน: คนที่เลือกอยู่ตรงกลาง เพื่อนล้อมรอบ และสถานที่อยู่รอบนอก
         if selected_graph_user != "ทั้งหมด":
