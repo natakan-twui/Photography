@@ -925,9 +925,7 @@ elif page == "กราฟความสัมพันธ์":
                 + "</text></g>"
             )
         svg_parts = [
-            '<div style="width:100%; overflow:auto; border:1px solid #F3C4D6; border-radius:22px; background:#FFF8FB; box-shadow:0 6px 18px rgba(190,100,135,.08);">',
             f'<svg viewBox="0 0 {width} {height}" width="100%" height="850" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">',
-            '<rect width="1200" height="760" fill="#FFF8FB" rx="22"/>',
         ]
         # เส้นอยู่ด้านหลังวงกลม
         for user, location in like_edges:
@@ -944,7 +942,7 @@ elif page == "กราฟความสัมพันธ์":
             svg_parts.append(svg_node("user", name))
         for name in sorted(location_nodes):
             svg_parts.append(svg_node("location", name))
-        svg_parts.append("</svg></div>")
+        svg_parts.append("</svg>")
         st.components.v1.html("".join(svg_parts), height=875, scrolling=False)
         st.markdown(
             f"""
