@@ -33,22 +33,163 @@ st.markdown(
     """
     <style>
       .block-container {padding-top: 1.3rem; padding-bottom: 2rem;}
-      .hero {
-        padding: 1.5rem 1.7rem; border-radius: 22px;
-        background: linear-gradient(120deg, #111827 0%, #1f2937 55%, #7c3aed 100%);
-        color: white; margin-bottom: 1rem;
-      }
-      .hero h1 {margin:0; font-size:2.15rem;}
-      .hero p {opacity:.88; margin:.35rem 0 0 0;}
-      .recommend-card {
-        padding: 1rem 1.1rem; border: 1px solid rgba(128,128,128,.25);
-        border-radius: 16px; margin-bottom: .75rem;
-      }
-      .score-pill {
-        display:inline-block; padding:.2rem .55rem; border-radius:999px;
-        background:#7c3aed; color:white; font-size:.8rem; font-weight:700;
-      }
-      .muted {opacity:.72; font-size:.9rem;}
+      /* ===== Pastel Pink Theme ===== */
+
+.stApp {
+    background-color: #FFF8FB;
+}
+
+/* Main content */
+.block-container {
+    padding-top: 1.3rem;
+    padding-bottom: 2rem;
+}
+
+/* ===== Sidebar ===== */
+
+[data-testid="stSidebar"] {
+    background: linear-gradient(
+        180deg,
+        #FFF0F6 0%,
+        #FCE7F3 100%
+    );
+    border-right: 1px solid #F5C6D9;
+}
+
+[data-testid="stSidebar"] h2 {
+    color: #9B4F72;
+}
+
+[data-testid="stSidebar"] p {
+    color: #8B6575;
+}
+
+/* ===== Hero ===== */
+
+.hero {
+    padding: 1.5rem 1.7rem;
+    border-radius: 22px;
+    background: linear-gradient(
+        120deg,
+        #FBCFE8 0%,
+        #F9A8D4 55%,
+        #FCE7F3 100%
+    );
+    color: #713B55;
+    margin-bottom: 1rem;
+    border: 1px solid #F4BCD3;
+    box-shadow: 0 6px 18px rgba(190, 100, 135, 0.10);
+}
+
+.hero h1 {
+    margin: 0;
+    font-size: 2.15rem;
+    color: #713B55;
+}
+
+.hero p {
+    opacity: .9;
+    margin: .35rem 0 0 0;
+    color: #814A63;
+}
+
+/* ===== Headings ===== */
+
+h1, h2, h3 {
+    color: #91496A;
+}
+
+/* ===== Metric ===== */
+
+[data-testid="stMetric"] {
+    background: #FFFFFF;
+    border: 1px solid #F3C4D6;
+    border-radius: 16px;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(190, 100, 135, 0.07);
+}
+
+[data-testid="stMetricLabel"] {
+    color: #9A7181;
+}
+
+[data-testid="stMetricValue"] {
+    color: #B6537D;
+}
+
+/* ===== Recommendation Card ===== */
+
+.recommend-card {
+    padding: 1rem 1.1rem;
+    border: 1px solid #F3C4D6;
+    border-radius: 16px;
+    margin-bottom: .75rem;
+    background: #FFFFFF;
+    box-shadow: 0 4px 14px rgba(190, 100, 135, 0.08);
+}
+
+/* ===== Score ===== */
+
+.score-pill {
+    display: inline-block;
+    padding: .2rem .55rem;
+    border-radius: 999px;
+    background: #E88EAE;
+    color: #FFFFFF;
+    font-size: .8rem;
+    font-weight: 700;
+}
+
+/* ===== Muted Text ===== */
+
+.muted {
+    opacity: .72;
+    font-size: .9rem;
+    color: #9B7181;
+}
+
+/* ===== Buttons ===== */
+
+.stButton > button {
+    border-radius: 12px;
+    border: 1px solid #E8A6BE;
+    background: #F4A6C1;
+    color: #FFFFFF;
+    font-weight: 600;
+}
+
+.stButton > button:hover {
+    background: #E88EAE;
+    border-color: #E88EAE;
+    color: #FFFFFF;
+}
+
+/* ===== Selectbox ===== */
+
+[data-baseweb="select"] > div {
+    border-color: #EFC0D2;
+    border-radius: 12px;
+}
+
+/* ===== DataFrame ===== */
+
+[data-testid="stDataFrame"] {
+    border: 1px solid #F3C4D6;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+/* ===== Divider ===== */
+
+hr {
+    border-color: #F3C4D6;
+}
+
+/* ===== Alert ===== */
+
+[data-testid="stAlert"] {
+    border-radius: 14px;
+}
     </style>
     """,
     unsafe_allow_html=True,
