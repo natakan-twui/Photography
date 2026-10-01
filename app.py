@@ -151,23 +151,23 @@ elif page == "Recommendations":
     else:
         for i, row in enumerate(rows, start=1):
             image_col, info_col = st.columns([1, 2])
-            with image_col:
-    image_file = row.get("image")
+                with image_col:
+                    image_file = row.get("image")
 
-    if image_file:
-        image_path = BASE_DIR / image_file
+                if image_file:
+                    image_path = BASE_DIR / image_file
 
-        if image_path.exists():
-            st.image(
-                str(image_path),
-                use_container_width=True
-            )
-        else:
-            st.warning(
-                f"ไม่พบไฟล์รูป: {image_path.name}"
-            )
-    else:
-        st.info("ไม่มีรูปภาพ")
+                    if image_path.exists():
+                        st.image(
+                            str(image_path),
+                            use_container_width=True
+                        )
+                    else:
+                        st.warning(
+                            f"ไม่พบไฟล์รูป: {image_path.name}"
+                        )
+                else:
+                    st.info("ไม่มีรูปภาพ")
             with info_col:
                 st.markdown(
                     f"""
