@@ -381,9 +381,6 @@ if page == "Dashboard":
                             st.markdown(
                                 f"""
                                 <div class="recommend-card">
-                                    <span class="score-pill">
-                                        ⭐ แนะนำโดย {len(friend_names)} คน
-                                    </span>
 
                                     <h3 style="margin:.55rem 0 .35rem 0;">
                                         📍 {location_name}
@@ -393,6 +390,7 @@ if page == "Dashboard":
                                         👥 เพื่อนที่ชอบสถานที่นี้:<br>
                                         <strong>{friend_text}</strong>
                                     </div>
+
                                 </div>
                                 """,
                                 unsafe_allow_html=True,
