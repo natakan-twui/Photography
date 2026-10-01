@@ -254,10 +254,10 @@ if page == "Dashboard":
 
     c1, c2, c3, c4 = st.columns(4)
 
-    c1.metric("Users", m["users"])
-    c2.metric("Locations", m["locations"])
-    c3.metric("LIKES", m["likes"])
-    c4.metric("FRIEND", m["friends"])
+    c1.metric("คน", m["users"])
+    c2.metric("สถานที่ถ่ายรูป", m["locations"])
+    c3.metric("ความชอบ", m["likes"])
+    c4.metric("เพื่อน", m["friends"])
 
     st.divider()
 
