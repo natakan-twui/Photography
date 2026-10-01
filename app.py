@@ -247,6 +247,165 @@ st.markdown(
 
 
 if page == "Dashboard":
+    st.subheader("📊 Dashboard")
+
+    # ===== Graph Overview =====
+    m = get_dashboard_metrics()
+
+    c1, c2, c3, c4 = st.columns(4)
+
+    c1.metric("Users", m["users"])
+    c2.metric("Locations", m["locations"])
+    c3.metric("LIKES", m["likes"])
+    c4.metric("FRIEND", m["friends"])
+
+    st.divider()
+
+    # ===== Select User =====
+    selected = user_selector("dash_user")
+    profile = get_user_profile(selected)
+
+    if profile:
+
+        # ===== Selected User =====
+        st.markdown(f"### 👤 {selected}")
+
+        user_col1, user_col2 = st.columns(2)
+
+        with user_col1:
+            st.markdown("**❤️ สถานที่ที่ชอบ**")
+            st.write(f"{len(profile['likes'])} แห่ง")
+
+        with user_col2:
+            st.markdown("**👥 เพื่อน**")
+            st.write(f"{len(profile['friends'])} คน")
+
+        st.divider()
+
+        # ===== Friends =====
+        st.markdown("### 👥 เพื่อนของคุณ")
+
+        friends = get_user_friends(selected)
+
+        if friends:
+            friend_cols = st.columns(min(len(friends), 4))
+
+            for i, friend in enumerate(friends):
+                with friend_cols[i % len(friend_cols)]:
+                    st.markdown(
+                        f"""
+                        <div class="recommend-card" style="text-align:center;">
+                            <div style="font-size:2rem;">👤</div>
+                            <strong>{friend}</strong>
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
+        else:
+            st.info("ผู้ใช้นี้ยังไม่มีเพื่อน")
+
+        st.divider()
+
+        # ===== Recommended Locations from Friends =====
+        st.markdown("### ✨ สถานที่ที่แนะนำจากเพื่อน")
+
+        if friends:
+
+            # เก็บสถานที่ + รายชื่อเพื่อนที่ชอบสถานที่นั้น
+            recommended = {}
+
+            for friend in friends:
+                friend_likes = get_user_likes(friend)
+
+                for location in friend_likes:
+
+                    # ไม่แนะนำสถานที่ที่ User เลือกชอบอยู่แล้ว
+                    if location not in profile["likes"]:
+
+                        if location not in recommended:
+                            recommended[location] = []
+
+                        recommended[location].append(friend)
+
+            # เรียงสถานที่ที่มีเพื่อนชอบมากที่สุดก่อน
+            recommended = dict(
+                sorted(
+                    recommended.items(),
+                    key=lambda item: (-len(item[1]), item[0])
+                )
+            )
+
+            # เอาข้อมูลรูปภาพของ Location
+            locations = get_locations()
+
+            image_map = {
+                location["name"]: location.get("image")
+                for location in locations
+            }
+
+            if recommended:
+
+                # แสดงสูงสุด 6 สถานที่
+                recommended_items = list(recommended.items())[:6]
+
+                for row_start in range(0, len(recommended_items), 3):
+
+                    row_items = recommended_items[row_start:row_start + 3]
+                    cols = st.columns(3)
+
+                    for col, (location_name, friend_names) in zip(
+                        cols, row_items
+                    ):
+
+                        with col:
+
+                            # รูปสถานที่
+                            image_file = image_map.get(location_name)
+
+                            if image_file:
+                                image_path = BASE_DIR / image_file
+
+                                if image_path.exists():
+                                    st.image(
+                                        str(image_path),
+                                        use_container_width=True
+                                    )
+                                else:
+                                    st.info("ไม่พบรูปภาพ")
+                            else:
+                                st.info("ไม่มีรูปภาพ")
+
+                            # จำนวนเพื่อนที่แนะนำ
+                            friend_text = ", ".join(friend_names)
+
+                            st.markdown(
+                                f"""
+                                <div class="recommend-card">
+                                    <span class="score-pill">
+                                        ⭐ แนะนำโดย {len(friend_names)} คน
+                                    </span>
+
+                                    <h3 style="margin:.55rem 0 .35rem 0;">
+                                        📍 {location_name}
+                                    </h3>
+
+                                    <div class="muted">
+                                        👥 เพื่อนที่ชอบสถานที่นี้:<br>
+                                        <strong>{friend_text}</strong>
+                                    </div>
+                                </div>
+                                """,
+                                unsafe_allow_html=True,
+                            )
+
+            else:
+                st.info(
+                    "ยังไม่มีสถานที่ใหม่ที่เพื่อนของคุณชอบ "
+                    "และคุณยังไม่เคยชอบ"
+                )
+
+        else:
+            st.info("ยังไม่มีข้อมูลเพื่อนสำหรับสร้างคำแนะนำ")
     st.subheader("ภาพรวม Graph")
     m = get_dashboard_metrics()
     c1, c2, c3, c4 = st.columns(4)
