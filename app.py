@@ -458,7 +458,7 @@ elif page == "Recommendations":
 elif page == "User & Location":
     st.subheader("ข้อมูล User และสถานที่")
 
-    selected = user_selector("dashboard_user")
+    selected = user_selector("data_user")
     profile = get_user_profile(selected)
 
     if profile:
