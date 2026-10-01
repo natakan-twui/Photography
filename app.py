@@ -844,7 +844,7 @@ elif page == "กราฟความสัมพันธ์":
             )
             liked_locations = sorted(location_nodes)
             if friends:
-                friend_radius = 205
+                friend_radius = 300
                 for i, name in enumerate(friends):
                     angle = -math.pi / 2 + (2 * math.pi * i / len(friends))
                     positions[("user", name)] = (
@@ -852,7 +852,7 @@ elif page == "กราฟความสัมพันธ์":
                         cy + friend_radius * math.sin(angle),
                     )
             if liked_locations:
-                location_radius = 315
+                location_radius = 450
                 for i, name in enumerate(liked_locations):
                     angle = -math.pi / 2 + (2 * math.pi * i / len(liked_locations))
                     positions[("location", name)] = (
