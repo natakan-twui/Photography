@@ -37,6 +37,10 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
+st.markdown("""
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+""", unsafe_allow_html=True)
 st.markdown(
     """
     <style>
@@ -264,7 +268,7 @@ def show_location_image(image_value: str | None, caption: str | None = None) -> 
         st.info("ไม่พบรูปภาพ")
 require_connection()
 with st.sidebar:
-    st.markdown("## 📷 Photography Graph")
+    st.markdown("## <i class="fa-solid fa-camera"></i> Photography Graph")
     st.caption("Neo4j Aura + Streamlit")
     st.link_button(
         "↩️ กลับหน้ารวมโปรเจกต์",
