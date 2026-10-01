@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import hashlib
+import html
+import math
 import re
 from pathlib import Path
 
@@ -950,161 +952,201 @@ elif page == "กราฟความสัมพันธ์":
             or row["user2"] == selected_graph_user
         ]
 
-    # ===== สร้าง NetworkX Graph =====
-    try:
-        import networkx as nx
-        import matplotlib.pyplot as plt
-        from matplotlib.lines import Line2D
+    # ===== สร้าง Graph แบบ SVG จริงบนหน้าเว็บ =====
+    # ไม่ใช้รูปภาพ/PNG: เป็น SVG + HTML ที่วาดจากข้อมูล Neo4j
+    def wrap_label(text_value: str, max_chars: int = 15) -> list[str]:
+        text_value = str(text_value)
+        if len(text_value) <= max_chars:
+            return [text_value]
+        words = text_value.split()
+        if len(words) > 1:
+            lines = []
+            current = ""
+            for word in words:
+                candidate = f"{current} {word}".strip()
+                if len(candidate) <= max_chars or not current:
+                    current = candidate
+                else:
+                    lines.append(current)
+                    current = word
+            if current:
+                lines.append(current)
+            if len(lines) <= 2:
+                return lines
+        return [text_value[:max_chars - 1] + "…"]
 
-        G = nx.Graph()
+    def node_radius(name: str, node_type: str) -> float:
+        longest = max((len(line) for line in wrap_label(name)), default=1)
+        base = 43 if node_type == "user" else 52
+        return min(72, max(base, 23 + longest * 3.0))
 
-        for row in graph_likes_rows:
-            G.add_node(row["user"], node_type="user")
-            G.add_node(row["location"], node_type="location")
-            G.add_edge(row["user"], row["location"], relation="LIKES")
+    user_nodes: set[str] = set()
+    location_nodes: set[str] = set()
+    like_edges: list[tuple[str, str]] = []
+    friend_edges: list[tuple[str, str]] = []
 
-        for row in graph_friend_rows:
-            G.add_node(row["user1"], node_type="user")
-            G.add_node(row["user2"], node_type="user")
-            G.add_edge(row["user1"], row["user2"], relation="FRIEND")
+    for row in graph_likes_rows:
+        user = str(row["user"])
+        location = str(row["location"])
+        user_nodes.add(user)
+        location_nodes.add(location)
+        like_edges.append((user, location))
 
-        # กรณีเลือกชื่อคนที่ยังไม่มีความสัมพันธ์ ให้แสดงตัวคนไว้ด้วย
+    for row in graph_friend_rows:
+        user1 = str(row["user1"])
+        user2 = str(row["user2"])
+        user_nodes.add(user1)
+        user_nodes.add(user2)
+        friend_edges.append((user1, user2))
+
+    if selected_graph_user != "ทั้งหมด":
+        user_nodes.add(selected_graph_user)
+
+    if not user_nodes and not location_nodes:
+        st.info("ยังไม่มีข้อมูลสำหรับแสดงกราฟ")
+    else:
+        width, height = 1200, 760
+        cx, cy = width / 2, height / 2
+        positions: dict[tuple[str, str], tuple[float, float]] = {}
+
+        # เลือกคน: คนที่เลือกอยู่ตรงกลาง เพื่อนล้อมรอบ และสถานที่อยู่รอบนอก
         if selected_graph_user != "ทั้งหมด":
-            G.add_node(selected_graph_user, node_type="user")
+            positions[("user", selected_graph_user)] = (cx, cy)
 
-        if G.number_of_nodes() == 0:
-            st.info("ยังไม่มีข้อมูลสำหรับแสดงกราฟ")
+            friends = sorted(
+                n for n in user_nodes
+                if n != selected_graph_user
+                and any({a, b} == {selected_graph_user, n} for a, b in friend_edges)
+            )
+            liked_locations = sorted(location_nodes)
+
+            if friends:
+                friend_radius = 205
+                for i, name in enumerate(friends):
+                    angle = -math.pi / 2 + (2 * math.pi * i / len(friends))
+                    positions[("user", name)] = (
+                        cx + friend_radius * math.cos(angle),
+                        cy + friend_radius * math.sin(angle),
+                    )
+
+            if liked_locations:
+                location_radius = 315
+                for i, name in enumerate(liked_locations):
+                    angle = -math.pi / 2 + (2 * math.pi * i / len(liked_locations))
+                    positions[("location", name)] = (
+                        cx + location_radius * math.cos(angle),
+                        cy + location_radius * math.sin(angle),
+                    )
         else:
-            user_nodes = [
-                node for node, data in G.nodes(data=True)
-                if data.get("node_type") == "user"
-            ]
-            location_nodes = [
-                node for node, data in G.nodes(data=True)
-                if data.get("node_type") == "location"
-            ]
+            # ทั้งหมด: User อยู่ในวงใน / Location อยู่ในวงนอก
+            users_sorted = sorted(user_nodes)
+            locations_sorted = sorted(location_nodes)
+            user_radius = 175 if len(users_sorted) <= 10 else 215
+            location_radius = 315
 
-            # จัดตำแหน่งให้ User อยู่ด้านบนและ Location อยู่ด้านล่าง
-            pos = {}
-            if selected_graph_user != "ทั้งหมด":
-                center = selected_graph_user
-                friends = [
-                    n for n in user_nodes
-                    if n != center and G.has_edge(center, n)
-                    and G.edges[center, n].get("relation") == "FRIEND"
-                ]
-                liked_locations = [
-                    n for n in location_nodes
-                    if G.has_edge(center, n)
-                    and G.edges[center, n].get("relation") == "LIKES"
-                ]
+            for i, name in enumerate(users_sorted):
+                angle = -math.pi / 2 + (2 * math.pi * i / max(1, len(users_sorted)))
+                positions[("user", name)] = (
+                    cx + user_radius * math.cos(angle),
+                    cy + user_radius * math.sin(angle),
+                )
 
-                pos[center] = (0, 1.0)
-                if friends:
-                    friend_positions = nx.circular_layout(friends, scale=2.2)
-                    for n, xy in friend_positions.items():
-                        pos[n] = (float(xy[0]), float(xy[1]) + 0.15)
-                if liked_locations:
-                    location_positions = nx.circular_layout(liked_locations, scale=2.7)
-                    for n, xy in location_positions.items():
-                        pos[n] = (float(xy[0]), float(xy[1]) - 1.7)
+            for i, name in enumerate(locations_sorted):
+                angle = -math.pi / 2 + (2 * math.pi * i / max(1, len(locations_sorted)))
+                positions[("location", name)] = (
+                    cx + location_radius * math.cos(angle),
+                    cy + location_radius * math.sin(angle),
+                )
 
-                # เติมตำแหน่งให้กรณีมีโหนดอื่นจากข้อมูล
-                missing = [n for n in G.nodes if n not in pos]
-                if missing:
-                    extra_pos = nx.spring_layout(G.subgraph(missing), seed=42, scale=2.0)
-                    for n, xy in extra_pos.items():
-                        pos[n] = (float(xy[0]), float(xy[1]))
+        def edge_point(node_type: str, name: str):
+            return positions.get((node_type, name))
+
+        def svg_line(x1: float, y1: float, x2: float, y2: float, dashed: bool = False) -> str:
+            dash = ' stroke-dasharray="8 7"' if dashed else ""
+            edge_color = "#D7A9C1" if dashed else "#AAB8F2"
+            edge_width = "2.2" if dashed else "3.2"
+            return (
+                f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" '
+                f'stroke="{edge_color}" stroke-width="{edge_width}" opacity="0.85"{dash}/>'
+            )
+
+        def svg_node(node_type: str, name: str) -> str:
+            pos = positions.get((node_type, name))
+            if pos is None:
+                return ""
+            x, y = pos
+            radius = node_radius(name, node_type)
+            if node_type == "user":
+                fill = "#D9D8FF"
+                text_color = "#413C66"
             else:
-                pos = nx.spring_layout(G, seed=42, k=1.7, iterations=120)
+                fill = "#FFE2A8"
+                text_color = "#6A4A1F"
 
-            fig, ax = plt.subplots(figsize=(15, 9))
-            fig.patch.set_facecolor("#FFF8FB")
-            ax.set_facecolor("#FFF8FB")
+            stroke = "#FFFFFF"
+            stroke_width = 3
+            if selected_graph_user == name and node_type == "user":
+                stroke = "#B6537D"
+                stroke_width = 5
 
-            user_color = "#E88EAE"
-            location_color = "#A8D8EA"
-            edge_like_color = "#E9A6BF"
-            edge_friend_color = "#B99ACB"
+            lines = wrap_label(name)
+            line_height = 16
+            start_y = y - ((len(lines) - 1) * line_height / 2)
+            text_parts = []
+            for index, line in enumerate(lines):
+                dy = start_y + index * line_height
+                text_parts.append(
+                    f'<tspan x="{x:.1f}" y="{dy:.1f}">{html.escape(line)}</tspan>'
+                )
 
-            # วาดเส้นแยกตามประเภทความสัมพันธ์
-            like_edges = [
-                (u, v) for u, v, data in G.edges(data=True)
-                if data.get("relation") == "LIKES"
-            ]
-            friend_edges = [
-                (u, v) for u, v, data in G.edges(data=True)
-                if data.get("relation") == "FRIEND"
-            ]
-
-            nx.draw_networkx_edges(
-                G, pos, edgelist=like_edges, ax=ax,
-                edge_color=edge_like_color, width=2.0,
-                alpha=.8, arrows=False,
-            )
-            nx.draw_networkx_edges(
-                G, pos, edgelist=friend_edges, ax=ax,
-                edge_color=edge_friend_color, width=2.8,
-                style="dashed", alpha=.9,
+            return (
+                f'<g class="graph-node">'
+                f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{radius:.1f}" '
+                f'fill="{fill}" stroke="{stroke}" stroke-width="{stroke_width}"/>'
+                f'<text x="{x:.1f}" text-anchor="middle" dominant-baseline="middle" '
+                f'font-family="Arial, Tahoma, sans-serif" font-size="14" font-weight="600" '
+                f'fill="{text_color}">'
+                + "".join(text_parts)
+                + "</text></g>"
             )
 
-            nx.draw_networkx_nodes(
-                G, pos, nodelist=user_nodes, ax=ax,
-                node_color=user_color, node_size=2600,
-                edgecolors="#FFFFFF", linewidths=2.5,
-            )
-            nx.draw_networkx_nodes(
-                G, pos, nodelist=location_nodes, ax=ax,
-                node_color=location_color, node_size=3000,
-                node_shape="s", edgecolors="#FFFFFF", linewidths=2.5,
-            )
+        svg_parts = [
+            '<div style="width:100%; overflow:auto; border:1px solid #F3C4D6; border-radius:22px; background:#FFF8FB; box-shadow:0 6px 18px rgba(190,100,135,.08);">',
+            f'<svg viewBox="0 0 {width} {height}" width="100%" height="760" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">',
+            '<rect width="1200" height="760" fill="#FFF8FB" rx="22"/>',
+        ]
 
-            nx.draw_networkx_labels(
-                G, pos, ax=ax, font_size=10,
-                font_weight="bold", font_color="#713B55",
-            )
+        # เส้นอยู่ด้านหลังวงกลม
+        for user, location in like_edges:
+            p1 = edge_point("user", user)
+            p2 = edge_point("location", location)
+            if p1 and p2:
+                svg_parts.append(svg_line(*p1, *p2, dashed=True))
 
-            legend_items = [
-                Line2D([0], [0], marker="o", color="w", label="คน",
-                       markerfacecolor=user_color, markeredgecolor="white", markersize=13),
-                Line2D([0], [0], marker="s", color="w", label="สถานที่ถ่ายรูป",
-                       markerfacecolor=location_color, markeredgecolor="white", markersize=13),
-                Line2D([0], [0], color=edge_like_color, lw=3, label="LIKES"),
-                Line2D([0], [0], color=edge_friend_color, lw=3, ls="--", label="FRIEND"),
-            ]
-            ax.legend(
-                handles=legend_items, loc="upper left",
-                frameon=True, fancybox=True, framealpha=.95,
-                facecolor="white", edgecolor="#F3C4D6",
-            )
+        for user1, user2 in friend_edges:
+            p1 = edge_point("user", user1)
+            p2 = edge_point("user", user2)
+            if p1 and p2:
+                svg_parts.append(svg_line(*p1, *p2, dashed=False))
 
-            title = (
-                "กราฟความสัมพันธ์ทั้งหมด"
-                if selected_graph_user == "ทั้งหมด"
-                else f"กราฟความสัมพันธ์ของ {selected_graph_user}"
-            )
-            ax.set_title(
-                title, fontsize=18, fontweight="bold",
-                color="#91496A", pad=18,
-            )
-            ax.axis("off")
-            plt.tight_layout()
-            st.pyplot(fig, use_container_width=True)
-            plt.close(fig)
+        for name in sorted(user_nodes):
+            svg_parts.append(svg_node("user", name))
+        for name in sorted(location_nodes):
+            svg_parts.append(svg_node("location", name))
 
-            st.markdown(
-                f"""
-                <div class="graph-card">
-                    <strong>📌 กำลังแสดง: {selected_graph_user}</strong><br>
-                    <span class="muted">
-                        คน {len(user_nodes)} คน · สถานที่ {len(location_nodes)} แห่ง ·
-                        LIKES {len(like_edges)} รายการ · FRIEND {len(friend_edges)} ความสัมพันธ์
-                    </span>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+        svg_parts.append("</svg></div>")
+        st.components.v1.html("".join(svg_parts), height=785, scrolling=False)
 
-    except Exception as exc:
-        st.warning(f"ไม่สามารถวาดกราฟได้: {exc}")
+        st.markdown(
+            f"""
+            <div class="graph-card">
+                <strong>📌 กำลังแสดง: {html.escape(selected_graph_user)}</strong><br>
+                <span class="muted">
+                    คน {len(user_nodes)} คน · สถานที่ {len(location_nodes)} แห่ง ·
+                    LIKES {len(like_edges)} รายการ · FRIEND {len(friend_edges)} ความสัมพันธ์
+                </span>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
